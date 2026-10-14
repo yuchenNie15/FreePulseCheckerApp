@@ -19,3 +19,16 @@ public struct CloseButton: View {
         .accessibilityLabel("Close")
     }
 }
+
+internal struct CloseButton_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [.init(name: "Default", state: ())],
+            configure: { CloseButton(action: {}).padding(32).background(Color.background) }
+        )
+    }
+}

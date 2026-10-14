@@ -3,10 +3,10 @@ import Testing
 @testable import PulseEngine
 
 @Suite struct BeatDetectorTests {
-    /// A clean 60 Hz pulse wave with respiratory variability and a dicrotic wave after every beat.
-    ///
-    /// Expected: one detection per beat after the 1 s warm-up, none on the dicrotic wave, and detected
-    /// intervals within 3 ms of the true intervals.
+    /** A clean 60 Hz pulse wave with respiratory variability and a dicrotic wave after every beat.
+
+    Expected: one detection per beat after the 1 s warm-up, none on the dicrotic wave, and detected
+    intervals within 3 ms of the true intervals. */
     @Test(arguments: [50.0, 75, 110, 160])
     func detectsEveryBeatWithAccurateTiming(bpm: Double) {
         let ppg = SyntheticPPG(intervals: SyntheticPPG.intervals(bpm: bpm, duration: 30))

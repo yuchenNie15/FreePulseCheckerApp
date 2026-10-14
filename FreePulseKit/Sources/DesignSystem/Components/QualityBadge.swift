@@ -19,3 +19,25 @@ public struct QualityBadge: View {
         }
     }
 }
+
+internal struct QualityBadge_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<(quality: SignalQuality, prefix: String?)> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Good", state: (.good, nil)),
+                .init(name: "Fair", state: (.fair, nil)),
+                .init(name: "Poor", state: (.poor, nil)),
+                .init(name: "Good With Prefix", state: (.good, "Signal:")),
+                .init(name: "Fair With Prefix", state: (.fair, "Signal:")),
+                .init(name: "Poor With Prefix", state: (.poor, "Signal:")),
+            ],
+            configure: { state in
+                QualityBadge(state.quality, prefix: state.prefix).padding().background(Color.background)
+            }
+        )
+    }
+}

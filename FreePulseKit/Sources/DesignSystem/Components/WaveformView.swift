@@ -35,3 +35,26 @@ public struct WaveformView: View {
             .shadow(color: .accentStart.opacity(0.6), radius: 6)
     }
 }
+
+internal struct WaveformView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<(points: [Double], lineWidth: CGFloat)> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Empty", state: ([], 3)),
+                .init(name: "Flat", state: (PreviewFixtures.flatWaveform, 3)),
+                .init(name: "Pulse", state: (PreviewFixtures.pulseWaveform, 3)),
+                .init(name: "Pulse Thin Line", state: (PreviewFixtures.pulseWaveform, 2.5)),
+            ],
+            configure: { state in
+                WaveformView(points: state.points, lineWidth: state.lineWidth)
+                    .frame(width: PreviewFixtures.componentWidth, height: 120)
+                    .padding()
+                    .background(Color.background)
+            }
+        )
+    }
+}

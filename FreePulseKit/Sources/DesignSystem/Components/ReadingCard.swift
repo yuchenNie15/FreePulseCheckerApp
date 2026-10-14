@@ -42,3 +42,30 @@ public struct ReadingCard: View {
         .accessibilityElement(children: .combine)
     }
 }
+
+internal struct ReadingCard_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<PulseReading> {
+        let day: TimeInterval = 86_400
+        return AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Good Today", state: PreviewFixtures.reading()),
+                .init(name: "Fair", state: PreviewFixtures.reading(bpm: 88, rmssd: 28, quality: .fair)),
+                .init(name: "Poor", state: PreviewFixtures.reading(bpm: 64, rmssd: 19, quality: .poor)),
+                .init(name: "HRV Unavailable", state: PreviewFixtures.reading(rmssd: nil, sdnn: nil, quality: .poor)),
+                .init(name: "Yesterday", state: PreviewFixtures.reading(date: PreviewFixtures.now - day + 30_060)),
+                .init(name: "Older", state: PreviewFixtures.reading(date: PreviewFixtures.now - 2 * day)),
+                .init(name: "Three Digit BPM", state: PreviewFixtures.reading(bpm: 142, rmssd: 120)),
+            ],
+            configure: { reading in
+                ReadingCard(reading: reading, now: PreviewFixtures.now, calendar: PreviewFixtures.calendar)
+                    .frame(width: PreviewFixtures.componentWidth)
+                    .padding()
+                    .background(Color.background)
+            }
+        )
+    }
+}

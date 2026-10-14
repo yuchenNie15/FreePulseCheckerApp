@@ -28,3 +28,16 @@ public struct StartButton: View {
         .accessibilityLabel("Start Measurement")
     }
 }
+
+internal struct StartButton_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [.init(name: "Default", state: ())],
+            configure: { StartButton(action: {}).padding(32).background(Color.background) }
+        )
+    }
+}

@@ -11,9 +11,9 @@ import Testing
         #expect(estimate.snrDecibels > 10)
     }
 
-    /// The second harmonic carries more power than the fundamental, as with a pronounced dicrotic notch.
-    ///
-    /// Expected: the estimate reports the fundamental, not double it.
+    /** The second harmonic carries more power than the fundamental, as with a pronounced dicrotic notch.
+
+    Expected: the estimate reports the fundamental, not double it. */
     @Test func prefersTheFundamentalOverAStrongerHarmonic() throws {
         let fundamental = sine(frequency: 1.2, sampleRate: 30, duration: 8)
         let harmonic = sine(frequency: 2.4, sampleRate: 30, duration: 8, amplitude: 1.2)

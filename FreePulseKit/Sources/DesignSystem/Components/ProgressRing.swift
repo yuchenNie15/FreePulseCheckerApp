@@ -22,3 +22,22 @@ public struct ProgressRing: View {
         }
     }
 }
+
+internal struct ProgressRing_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Double> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Empty", state: 0),
+                .init(name: "Partial", state: 0.3),
+                .init(name: "Full", state: 1),
+            ],
+            configure: { progress in
+                ProgressRing(progress: progress).frame(width: 200, height: 200).padding(32).background(Color.background)
+            }
+        )
+    }
+}

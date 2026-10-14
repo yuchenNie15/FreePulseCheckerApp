@@ -51,9 +51,9 @@ import Testing
         #expect(states.last == .absent)
     }
 
-    /// A finger is on the lens but the pulse amplitude stays at 0.01% of brightness, as when pressing hard.
-    ///
-    /// Expected: `.present` for the first 2 s, then `.tooMuchPressure`.
+    /** A finger is on the lens but the pulse amplitude stays at 0.01% of brightness, as when pressing hard.
+
+    Expected: `.present` for the first 2 s, then `.tooMuchPressure`. */
     @Test func weakPulseForTwoSecondsIsTooMuchPressure() {
         var detector = FingerDetector()
         var last = FingerState.absent

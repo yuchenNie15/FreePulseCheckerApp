@@ -3,8 +3,8 @@ import Testing
 @testable import DesignSystem
 
 @MainActor
-@Suite struct HRVChipSnapshotTests {
-    @Test func snapshots() {
+@Suite internal struct HRVChipSnapshotTests {
+    @Test internal func snapshots() {
         HRVChip_Previews.snapshots.assertSnapshots(layout: .component)
     }
 }

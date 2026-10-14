@@ -59,3 +59,29 @@ public struct ReadingSummaryView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+internal struct ReadingSummaryView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<PulseReading> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "HRV Available", state: PreviewFixtures.reading()),
+                .init(name: "RMSSD Only", state: PreviewFixtures.reading(sdnn: nil)),
+                .init(name: "HRV Unavailable", state: PreviewFixtures.reading(rmssd: nil, sdnn: nil)),
+                .init(name: "No Waveform", state: PreviewFixtures.reading(waveform: [])),
+                .init(name: "Fair Quality", state: PreviewFixtures.reading(bpm: 88, rmssd: 28, sdnn: 35, quality: .fair)),
+                .init(name: "Poor Quality", state: PreviewFixtures.reading(bpm: 64, rmssd: 19, sdnn: 24, quality: .poor)),
+                .init(name: "Three Digit BPM", state: PreviewFixtures.reading(bpm: 142, rmssd: 120, sdnn: 135)),
+            ],
+            configure: { reading in
+                ReadingSummaryView(reading: reading)
+                    .padding(Metrics.screenMargin)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .screenBackground()
+            }
+        )
+    }
+}

@@ -28,6 +28,8 @@ internal struct HRVChip_Previews: PreviewProvider {
             configurations: [
                 .init(name: "With RMSSD", state: 42),
                 .init(name: "Unavailable", state: nil),
+                .init(name: "Rounds Half Up", state: 41.5),
+                .init(name: "Three Digits", state: 120),
             ],
             configure: { rmssd in HRVChip(rmssd: rmssd).padding().background(Color.background) }
         )

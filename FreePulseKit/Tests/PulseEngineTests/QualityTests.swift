@@ -16,9 +16,9 @@ import Testing
         #expect(abs(QualityScorer.score(inputs(disagreement: nil)) - 0.8) < 1e-9)
     }
 
-    /// Every term except SNR is ideal, as when noise alone fills the band with plausible amplitude.
-    ///
-    /// Expected: the score is capped at 0.3, so the reading is Poor and no BPM is shown.
+    /** Every term except SNR is ideal, as when noise alone fills the band with plausible amplitude.
+
+    Expected: the score is capped at 0.3, so the reading is Poor and no BPM is shown. */
     @Test func noDominantRhythmIsAlwaysPoor() {
         #expect(QualityScorer.score(inputs(snr: 1.5)) == 0.3)
     }

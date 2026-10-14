@@ -5,10 +5,10 @@ import Testing
 
 @MainActor
 @Suite struct PulseAnalysisTests {
-    /// 60 fps frames of a fingertip pulse with respiratory variability, ±3 ms frame jitter and sensor noise,
-    /// measured for 60 s from the first BPM lock.
-    ///
-    /// Expected: BPM within ±2 of the truth, RMSSD and SDNN within ±5 ms, and Good quality.
+    /** 60 fps frames of a fingertip pulse with respiratory variability, ±3 ms frame jitter and sensor noise,
+    measured for 60 s from the first BPM lock.
+
+    Expected: BPM within ±2 of the truth, RMSSD and SDNN within ±5 ms, and Good quality. */
     @Test(arguments: [52.0, 75, 110])
     func measuresKnownHeartRateAndHRV(bpm: Double) throws {
         let ppg = SyntheticPPG(intervals: SyntheticPPG.intervals(bpm: bpm, duration: 90))
@@ -62,10 +62,10 @@ import Testing
         #expect(state.snapshot == PulseSnapshot(fingerState: .absent))
     }
 
-    /// A store receives finger frames, then `beginMeasuring`, then `reset`.
-    ///
-    /// Expected: the snapshot reports the finger once the hysteresis completes, `beginMeasuring` records the
-    /// latest frame time, and `reset` returns to the initial state.
+    /** A store receives finger frames, then `beginMeasuring`, then `reset`.
+
+    Expected: the snapshot reports the finger once the hysteresis completes, `beginMeasuring` records the
+    latest frame time, and `reset` returns to the initial state. */
     @Test func reducerDrivesSnapshotAndMeasuringPhase() async {
         let store = TestStore(initialState: PulseAnalysis.State(captureRate: 60)) {
             PulseAnalysis()
