@@ -3,8 +3,8 @@ import Testing
 @testable import FreePulseCheck
 
 @MainActor
-@Suite struct AppViewSnapshotTests {
-    @Test func snapshots() {
+@Suite internal struct AppViewSnapshotTests {
+    @Test internal func snapshots() {
         AppView_Previews.snapshots.assertSnapshots()
     }
 }
