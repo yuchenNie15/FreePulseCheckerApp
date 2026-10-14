@@ -10,16 +10,29 @@ internal struct MeasureFeature: Sendable {
 
     @ObservableState
     internal struct State: Equatable, Sendable {
-        @Shared(.readings) internal var readings
-        @Shared(.healthWarning) internal var healthWarning
+        @Shared internal var readings: IdentifiedArrayOf<PulseReading>
+        @Shared internal var healthWarning: String?
         @Presents internal var measurement: MeasurementFeature.State?
         internal var isCameraDeniedPresented = false
+        /// Reference point for the "Today" / "Yesterday" labels, refreshed on appear.
+        internal var now: Date
 
         internal var recentReadings: [PulseReading] {
             Array(readings.prefix(MeasureFeature.recentCount))
         }
 
-        internal init() {}
+        /** - Parameter readings: Defaults to the saved readings; previews pass `Shared(value:)`.
+        - Parameter healthWarning: Defaults to the app-wide warning key; previews pass `Shared(value:)`.
+        - Parameter now: Placeholder until `onAppear` reads the current date. */
+        internal init(
+            readings: Shared<IdentifiedArrayOf<PulseReading>> = Shared(.readings),
+            healthWarning: Shared<String?> = Shared(.healthWarning),
+            now: Date = .distantPast
+        ) {
+            _readings = readings
+            _healthWarning = healthWarning
+            self.now = now
+        }
     }
 
     internal enum Action: Equatable, Sendable {
@@ -27,6 +40,7 @@ internal struct MeasureFeature: Sendable {
         case cameraPermissionResponse(granted: Bool)
         case healthWarningDismissed
         case measurement(PresentationAction<MeasurementFeature.Action>)
+        case onAppear
         case openSettingsTapped
         case readingTapped(PulseReading.ID)
         case seeAllTapped
@@ -35,6 +49,7 @@ internal struct MeasureFeature: Sendable {
 
     @Dependency(\.appNavigator) private var appNavigator
     @Dependency(\.cameraPermission) private var cameraPermission
+    @Dependency(\.date) private var date
     @Dependency(\.openURL) private var openURL
     @Dependency(\.pulseSource) private var pulseSource
 
@@ -56,6 +71,10 @@ internal struct MeasureFeature: Sendable {
                 return .none
 
             case .measurement:
+                return .none
+
+            case .onAppear:
+                state.now = date.now
                 return .none
 
             case .openSettingsTapped:

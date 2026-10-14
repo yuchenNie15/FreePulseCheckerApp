@@ -102,14 +102,24 @@ import UIKit
 
     @Test internal func recentReadingsAreTheNewestThree() {
         let readings = PulseReading.previewReadings(now: Date(timeIntervalSince1970: 1_800_000_000))
-        let state = MeasureFeature.State()
-        state.$readings.withLock { $0 = IdentifiedArray(uniqueElements: readings) }
+        let state = MeasureFeature.State(readings: Shared(value: IdentifiedArray(uniqueElements: readings)))
 
         #expect(state.recentReadings == Array(readings.prefix(3)))
     }
 
     @Test internal func noReadingsMeansNoRecents() {
         #expect(MeasureFeature.State().recentReadings.isEmpty)
+    }
+
+    @Test internal func appearingRecordsTheCurrentDate() async {
+        let now = Date(timeIntervalSince1970: 1_791_967_260)
+        let store = makeStore {
+            $0.date.now = now
+        }
+
+        await store.send(.onAppear) {
+            $0.now = now
+        }
     }
 
     @Test internal func dismissingTheHealthWarningClearsIt() async {

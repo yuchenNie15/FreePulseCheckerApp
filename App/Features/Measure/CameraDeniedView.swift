@@ -57,3 +57,21 @@ internal struct CameraDeniedView: View {
         .preferredColorScheme(.dark)
     }
 }
+
+internal struct CameraDeniedView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<DynamicTypeSize> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: .large),
+                .init(name: "Accessibility 3 text", state: .accessibility3),
+            ],
+            configure: { size in
+                CameraDeniedView(onOpenSettings: {}, onDismiss: {}).environment(\.dynamicTypeSize, size)
+            }
+        )
+    }
+}

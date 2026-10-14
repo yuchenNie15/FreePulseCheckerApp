@@ -27,3 +27,16 @@ internal struct EmptyReadingsCard: View {
         .card()
     }
 }
+
+internal struct EmptyReadingsCard_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [.init(name: "Default", state: ())],
+            configure: { EmptyReadingsCard().padding().background(Color.background) }
+        )
+    }
+}

@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DesignSystem
+import Models
 import SwiftUI
 
 internal struct MeasureView: View {
@@ -25,7 +26,7 @@ internal struct MeasureView: View {
                 MeasureStartCard { store.send(.startTapped) }
                 RecentReadingsSection(
                     readings: store.recentReadings,
-                    now: Date(),
+                    now: store.now,
                     onSeeAll: { store.send(.seeAllTapped) },
                     onSelect: { store.send(.readingTapped($0)) }
                 )
@@ -34,6 +35,7 @@ internal struct MeasureView: View {
             .padding(.bottom, 24)
         }
         .screenBackground()
+        .onAppear { store.send(.onAppear) }
         .fullScreenCover(item: $store.scope(\.measurement, action: \.measurement)) { measurementStore in
             MeasurementView(store: measurementStore)
         }
@@ -52,11 +54,37 @@ internal struct MeasureView: View {
     }
 }
 
-#Preview {
-    MeasureView(
-        store: Store(initialState: MeasureFeature.State()) {
-            MeasureFeature()
-        }
-    )
-    .preferredColorScheme(.dark)
+internal struct MeasureView_Previews: PreviewProvider {
+    internal struct State {
+        internal var readings: [PulseReading] = []
+        internal var healthWarning: String?
+    }
+
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<State> {
+        let warning = "Saved on this iPhone. Apple Health access is off."
+        return AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Empty", state: State()),
+                .init(name: "One reading", state: State(readings: [MeasurePreviewFixtures.today])),
+                .init(name: "Four readings, three shown", state: State(readings: MeasurePreviewFixtures.all)),
+                .init(name: "Health warning, empty", state: State(healthWarning: warning)),
+                .init(name: "Health warning, with readings", state: State(readings: MeasurePreviewFixtures.all, healthWarning: warning)),
+            ],
+            configure: { state in
+                MeasureView(
+                    store: Store(
+                        initialState: MeasureFeature.State(
+                            readings: Shared(value: IdentifiedArray(uniqueElements: state.readings)),
+                            healthWarning: Shared(value: state.healthWarning),
+                            now: MeasurePreviewFixtures.now
+                        )
+                    ) { EmptyReducer() }
+                )
+            }
+        )
+    }
 }

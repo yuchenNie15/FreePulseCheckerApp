@@ -21,3 +21,16 @@ internal struct MeasureStartCard: View {
         .card(padding: 24)
     }
 }
+
+internal struct MeasureStartCard_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [.init(name: "Default", state: ())],
+            configure: { MeasureStartCard(onStart: {}).padding().background(Color.background) }
+        )
+    }
+}

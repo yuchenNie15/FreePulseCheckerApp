@@ -41,3 +41,28 @@ internal struct RecentReadingsSection: View {
         .padding(.horizontal, 4)
     }
 }
+
+internal struct RecentReadingsSection_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<[PulseReading]> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "No readings", state: []),
+                .init(name: "One reading", state: [MeasurePreviewFixtures.today]),
+                .init(
+                    name: "Three readings, mixed quality and dates",
+                    state: [MeasurePreviewFixtures.today, MeasurePreviewFixtures.yesterday, MeasurePreviewFixtures.older]
+                ),
+                .init(name: "Three-digit BPM", state: [MeasurePreviewFixtures.threeDigitBPM]),
+            ],
+            configure: { readings in
+                RecentReadingsSection(readings: readings, now: MeasurePreviewFixtures.now, onSeeAll: {}, onSelect: { _ in })
+                    .padding()
+                    .background(Color.background)
+            }
+        )
+    }
+}

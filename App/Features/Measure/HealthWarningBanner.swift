@@ -25,3 +25,22 @@ internal struct HealthWarningBanner: View {
         .overlay(RoundedRectangle(cornerRadius: Metrics.cardRadius).strokeBorder(Color.warning.opacity(0.45)))
     }
 }
+
+internal struct HealthWarningBanner_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<String> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Short message", state: "Saved on this iPhone. Apple Health access is off."),
+                .init(
+                    name: "Long message",
+                    state: "Saved on this iPhone, but Apple Health didn't accept it. Check Health access in Settings › Privacy & Security › Health › Free Pulse Check, then try again."
+                ),
+            ],
+            configure: { message in HealthWarningBanner(message: message, onDismiss: {}).padding().background(Color.background) }
+        )
+    }
+}

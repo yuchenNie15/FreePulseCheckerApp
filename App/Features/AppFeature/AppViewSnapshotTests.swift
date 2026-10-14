@@ -5,6 +5,6 @@ import Testing
 @MainActor
 @Suite internal struct AppViewSnapshotTests {
     @Test internal func snapshots() {
-        AppView_Previews.snapshots.assertSnapshots()
+        AppView_Previews.snapshots.assertSnapshots(layout: .device)
     }
 }
