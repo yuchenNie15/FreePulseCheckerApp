@@ -17,7 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.26.2"),
-        .package(url: "https://github.com/doordash-oss/swiftui-preview-snapshots", from: "1.1.1"),
+        .package(path: "../Vendor/swiftui-preview-snapshots"),
         .package(path: "../Vendor/swift-snapshot-testing"),
     ],
     targets: [
