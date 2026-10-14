@@ -11,24 +11,6 @@ internal struct MeasurementFeature: Sendable {
     internal static let duration = 60
     internal static let maximumPausedSeconds = 10
 
-    internal enum Phase: Equatable, Sendable {
-        case preparing
-        case waitingForFinger
-        case calibrating
-        case measuring
-        case paused
-        case result(PulseReading)
-        case failed(FailureReason)
-    }
-
-    internal enum FailureReason: Equatable, Sendable {
-        case fingerLifted
-        case unreliable
-        case cameraUnavailable
-        case overheated
-        case interrupted
-    }
-
     @ObservableState
     internal struct State: Equatable, Sendable {
         internal var analysis: PulseAnalysis.State
@@ -63,16 +45,11 @@ internal struct MeasurementFeature: Sendable {
         }
     }
 
-    private enum CancelID: Hashable, Sendable {
-        case engine
-        case timer
-    }
-
-    @Dependency(\.continuousClock) private var clock
+    @Dependency(\.continuousClock) internal var clock
     @Dependency(\.date.now) private var now
-    @Dependency(\.dismiss) private var dismiss
-    @Dependency(\.pulseAnalyzer) private var pulseAnalyzer
-    @Dependency(\.pulseSource) private var pulseSource
+    @Dependency(\.dismiss) internal var dismiss
+    @Dependency(\.pulseAnalyzer) internal var pulseAnalyzer
+    @Dependency(\.pulseSource) internal var pulseSource
     @Dependency(\.readingStore) private var readingStore
     @Dependency(\.uuid) private var uuid
 
@@ -141,144 +118,5 @@ internal struct MeasurementFeature: Sendable {
             }
         }
         .ifLet(\.$alert, action: \.alert)
-    }
-
-    private var engine: Effect<Action> {
-        .run { send in
-            for try await event in await pulseSource.events() {
-                switch event {
-                case let .frame(frame):
-                    await send(.analysis(.frame(frame)))
-                case let .motion(sample):
-                    await send(.analysis(.motion(sample)))
-                }
-            }
-        } catch: { error, send in
-            await send(.engineFailed(FailureReason(error)))
-        }
-        .cancellable(id: CancelID.engine, cancelInFlight: true)
-    }
-
-    private var timer: Effect<Action> {
-        .run { send in
-            for await _ in clock.timer(interval: .seconds(1)) {
-                await send(.timerTicked)
-            }
-        }
-        .cancellable(id: CancelID.timer, cancelInFlight: true)
-    }
-
-    private var cancelAll: Effect<Action> {
-        .merge(.cancel(id: CancelID.engine), .cancel(id: CancelID.timer))
-    }
-
-    private var finish: Effect<Action> {
-        .merge(cancelAll, .run { _ in await dismiss() })
-    }
-
-    private func fail(_ state: inout State, _ reason: FailureReason) -> Effect<Action> {
-        state.phase = .failed(reason)
-        state.alert = nil
-        return cancelAll
-    }
-
-    private func transition(_ state: inout State) -> Effect<Action> {
-        let snapshot = state.analysis.snapshot
-        switch state.phase {
-        case .preparing:
-            state.phase = .waitingForFinger
-            return .none
-
-        case .waitingForFinger where snapshot.fingerState == .present:
-            state.phase = .calibrating
-            return .none
-
-        case .calibrating where snapshot.fingerState == .absent:
-            state.phase = .waitingForFinger
-            return .none
-
-        case .calibrating where snapshot.bpm != nil:
-            state.phase = .measuring
-            return .merge(.send(.analysis(.beginMeasuring)), timer)
-
-        case .measuring where snapshot.fingerState != .present && state.remainingSeconds > 0:
-            state.phase = .paused
-            return timer
-
-        case .paused where snapshot.fingerState == .present:
-            state.phase = .measuring
-            return timer
-
-        default:
-            return .none
-        }
-    }
-
-    private func tick(_ state: inout State) -> Effect<Action> {
-        switch state.phase {
-        case .measuring:
-            state.remainingSeconds -= 1
-            guard state.remainingSeconds <= 0 else { return .none }
-            return .merge(
-                cancelAll,
-                .run { [analysis = state.analysis] send in
-                    let result = Result { try pulseAnalyzer.summarize(analysis) }
-                        .mapError { _ in PulseAnalysisError.unreliable }
-                    await send(.summaryFinished(result))
-                }
-            )
-
-        case .paused:
-            state.pausedSeconds += 1
-            guard state.pausedSeconds > Self.maximumPausedSeconds else { return .none }
-            return fail(&state, .fingerLifted)
-
-        default:
-            return .none
-        }
-    }
-}
-
-extension MeasurementFeature.Phase {
-    /// The camera is running and no outcome exists yet.
-    internal var isActive: Bool {
-        switch self {
-        case .preparing, .waitingForFinger, .calibrating, .measuring, .paused: true
-        case .result, .failed: false
-        }
-    }
-
-    internal var needsStopConfirmation: Bool {
-        switch self {
-        case .calibrating, .measuring, .paused: true
-        case .preparing, .waitingForFinger, .result, .failed: false
-        }
-    }
-}
-
-extension MeasurementFeature.FailureReason {
-    internal init(_ error: any Error) {
-        switch error as? PulseSourceError {
-        case .overheated: self = .overheated
-        case .interrupted: self = .interrupted
-        case .cameraUnavailable, .configurationFailed, nil: self = .cameraUnavailable
-        }
-    }
-}
-
-extension AlertState where Action == MeasurementFeature.Action.Alert {
-    internal static var stopMeasuring: Self {
-        AlertState {
-            TextState("Stop measuring?")
-        } actions: {
-            ButtonState(role: .destructive, action: .stopTapped) {
-                TextState("Stop")
-            }
-            ButtonState(role: .cancel) {
-                TextState("Keep Measuring")
-            }
-        } message: {
-            TextState("This reading won't be saved.")
-        }
     }
 }

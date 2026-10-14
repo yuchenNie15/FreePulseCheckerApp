@@ -1,4 +1,3 @@
-import PulseEngine
 import SwiftUI
 
 extension Color {
@@ -40,37 +39,4 @@ extension LinearGradient {
         startPoint: .leading,
         endPoint: .trailing
     )
-}
-
-extension SignalQuality {
-    public var color: Color {
-        switch self {
-        case .good: .qualityGood
-        case .fair: .qualityFair
-        case .poor: .qualityPoor
-        }
-    }
-
-    public var title: String {
-        switch self {
-        case .good: "Good"
-        case .fair: "Fair"
-        case .poor: "Poor"
-        }
-    }
-}
-
-extension Font {
-    public static let heroNumeral = Font.system(size: 92, weight: .heavy, design: .rounded)
-    public static let cardNumeral = Font.system(size: 34, weight: .bold, design: .rounded)
-    public static let rowNumeral = Font.system(size: 26, weight: .bold, design: .rounded)
-    public static let microLabel = Font.system(size: 11, weight: .bold)
-}
-
-public enum Metrics {
-    public static let screenMargin: CGFloat = 16
-    public static let cardPadding: CGFloat = 20
-    public static let cardSpacing: CGFloat = 12
-    public static let cardRadius: CGFloat = 20
-    public static let buttonRadius: CGFloat = 18
 }
