@@ -56,10 +56,42 @@ internal struct MeasurementView: View {
     }
 }
 
-#Preview("Measuring") {
-    MeasurementView(
-        store: Store(initialState: MeasurementFeature.State(captureRate: 60)) {
-            MeasurementFeature()
-        }
-    )
+internal struct MeasurementView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<MeasurementFeature.State> {
+        typealias Fixtures = MeasurementFlowPreviewFixtures
+        let measuring = Fixtures.state(phase: .measuring, snapshot: Fixtures.measuringSnapshot, remainingSeconds: 34)
+        return AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Preparing", state: Fixtures.state(phase: .preparing)),
+                .init(name: "Waiting For Finger", state: Fixtures.state(phase: .waitingForFinger)),
+                .init(
+                    name: "Calibrating",
+                    state: Fixtures.state(phase: .calibrating, snapshot: PulseSnapshot(fingerState: .present))
+                ),
+                .init(name: "Measuring", state: measuring),
+                .init(
+                    name: "Paused",
+                    state: Fixtures.state(phase: .paused, snapshot: PulseSnapshot(fingerState: .absent), remainingSeconds: 34)
+                ),
+                .init(name: "Result", state: Fixtures.state(phase: .result(Fixtures.reading))),
+                .init(name: "Failed", state: Fixtures.state(phase: .failed(.unreliable))),
+                .init(
+                    name: "Stop Measuring Alert",
+                    state: Fixtures.state(
+                        phase: .measuring,
+                        snapshot: Fixtures.measuringSnapshot,
+                        remainingSeconds: 34,
+                        alert: .stopMeasuring
+                    )
+                ),
+            ],
+            configure: { state in
+                MeasurementView(store: Store(initialState: state) { EmptyReducer() })
+            }
+        )
+    }
 }

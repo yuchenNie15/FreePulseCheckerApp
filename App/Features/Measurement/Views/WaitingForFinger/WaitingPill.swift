@@ -19,3 +19,20 @@ internal struct WaitingPill: View {
         .overlay(Capsule().strokeBorder(Color.separator))
     }
 }
+
+internal struct WaitingPill_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: ()),
+            ],
+            configure: {
+                WaitingPill().padding().background(Color.background)
+            }
+        )
+    }
+}

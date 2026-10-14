@@ -26,3 +26,29 @@ internal struct MeasurementHeader: View {
         }
     }
 }
+
+internal struct MeasurementHeader_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<MeasurementFeature.Phase> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Preparing", state: .preparing),
+                .init(name: "Waiting For Finger", state: .waitingForFinger),
+                .init(name: "Calibrating", state: .calibrating),
+                .init(name: "Measuring", state: .measuring),
+                .init(name: "Paused", state: .paused),
+                .init(name: "Result", state: .result(MeasurementFlowPreviewFixtures.reading)),
+                .init(name: "Failed", state: .failed(.unreliable)),
+            ],
+            configure: { phase in
+                MeasurementHeader(phase: phase) {}
+                    .padding(.bottom, 8)
+                    .frame(width: 390)
+                    .background(Color.background)
+            }
+        )
+    }
+}

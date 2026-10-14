@@ -39,3 +39,25 @@ internal struct WaitingForFingerView: View {
         .padding(.horizontal, Metrics.screenMargin + 8)
     }
 }
+
+internal struct WaitingForFingerView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<FingerState> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Absent", state: .absent),
+                .init(name: "Present", state: .present),
+                .init(name: "Partial", state: .partial),
+                .init(name: "Too Much Pressure", state: .tooMuchPressure),
+                .init(name: "Saturated", state: .saturated),
+                .init(name: "Too Dark", state: .tooDark),
+            ],
+            configure: { fingerState in
+                WaitingForFingerView(fingerState: fingerState).screenBackground()
+            }
+        )
+    }
+}

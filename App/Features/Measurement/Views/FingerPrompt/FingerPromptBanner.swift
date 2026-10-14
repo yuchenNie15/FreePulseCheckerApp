@@ -23,3 +23,27 @@ internal struct FingerPromptBanner: View {
         .accessibilityElement(children: .combine)
     }
 }
+
+internal struct FingerPromptBanner_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<FingerPrompt> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Partial", state: .partial),
+                .init(name: "Pressure", state: .pressure),
+                .init(name: "Saturated", state: .saturated),
+                .init(name: "Too Dark", state: .tooDark),
+                .init(name: "Lifted", state: .lifted),
+            ],
+            configure: { prompt in
+                FingerPromptBanner(prompt: prompt)
+                    .padding()
+                    .frame(width: 390)
+                    .background(Color.background)
+            }
+        )
+    }
+}

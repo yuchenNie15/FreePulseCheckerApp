@@ -36,3 +36,20 @@ internal struct FingerOnCameraIllustration: View {
         .accessibilityHidden(true)
     }
 }
+
+internal struct FingerOnCameraIllustration_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: ()),
+            ],
+            configure: {
+                FingerOnCameraIllustration().padding().background(Color.background)
+            }
+        )
+    }
+}
