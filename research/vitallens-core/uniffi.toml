@@ -1,6 +1,0 @@
-[bindings.swift]
-module_name = "VitalLensCore"
-cdylib_name = "vitallens_core"
-
-[bindings.kotlin]
-package_name = "com.rouast.vitallens.core"

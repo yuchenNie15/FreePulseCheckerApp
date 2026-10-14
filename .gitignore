@@ -64,3 +64,8 @@ fastlane/test_output
 # Local tooling
 .DS_Store
 .swiftpm/
+DerivedData/
+SourcePackages/
+
+# Third-party source kept locally for reference only
+research/
