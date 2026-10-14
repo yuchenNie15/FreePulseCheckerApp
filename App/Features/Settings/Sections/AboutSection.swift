@@ -35,12 +35,12 @@ internal struct AboutSection_Previews: PreviewProvider {
         AppPreviewSnapshots(
             configurations: [.init(name: "Default", state: ())],
             configure: { _ in
-                NavigationStack {
+                SettingsNavigationPreview {
                     List { AboutSection() }
                         .settingsListStyle()
                         .toolbarVisibility(.hidden, for: .navigationBar)
                 }
-                .frame(width: 390, height: 220)
+                .frame(width: 390, height: 300)
             }
         )
     }

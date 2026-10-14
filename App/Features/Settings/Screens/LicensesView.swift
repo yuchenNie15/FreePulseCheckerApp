@@ -44,7 +44,7 @@ internal struct LicensesView_Previews: PreviewProvider {
                 .init(name: "Short", state: [License.climbPulse, License.apache[0]]),
             ],
             configure: { licenses in
-                NavigationStack { LicensesView(licenses: licenses) }
+                SettingsNavigationPreview { LicensesView(licenses: licenses) }
             }
         )
     }
