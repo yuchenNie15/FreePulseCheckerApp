@@ -22,15 +22,15 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
-         <TestableReference skipped = "NO" parallelizable = "YES">
+         <TestableReference skipped = "NO" parallelizable = "NO">
             <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000043" BuildableName = "FreePulseCheckTests.xctest" BlueprintName = "FreePulseCheckTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference skipped = "NO" parallelizable = "YES">
+         <TestableReference skipped = "NO" parallelizable = "NO">
             <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "PulseEngineTests" BuildableName = "PulseEngineTests" BlueprintName = "PulseEngineTests" ReferencedContainer = "container:FreePulseKit">
             </BuildableReference>
          </TestableReference>
-         <TestableReference skipped = "NO" parallelizable = "YES">
+         <TestableReference skipped = "NO" parallelizable = "NO">
             <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "PulseSourceClientTests" BuildableName = "PulseSourceClientTests" BlueprintName = "PulseSourceClientTests" ReferencedContainer = "container:FreePulseKit">
             </BuildableReference>
          </TestableReference>
