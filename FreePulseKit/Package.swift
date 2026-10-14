@@ -36,8 +36,8 @@ let package = Package(
         .testTarget(name: "PulseSourceClientTests", dependencies: ["PulseSourceClient", "PulseEngine"]),
         .testTarget(name: "MeasurementFeatureTests", dependencies: ["MeasurementFeature", tca]),
         .testTarget(name: "MeasureFeatureTests", dependencies: ["MeasureFeature", tca]),
-        .testTarget(name: "HistoryFeatureTests", dependencies: ["HistoryFeature", tca]),
-        .testTarget(name: "SettingsFeatureTests", dependencies: ["SettingsFeature", tca]),
+        .testTarget(name: "HistoryFeatureTests", dependencies: ["AppClients", "HistoryFeature", "Models", tca]),
+        .testTarget(name: "SettingsFeatureTests", dependencies: ["AppClients", "HealthKitClient", "SettingsFeature", tca]),
         .testTarget(name: "AppFeatureTests", dependencies: ["AppClients", "AppFeature", tca]),
     ]
 )

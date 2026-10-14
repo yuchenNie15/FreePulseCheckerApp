@@ -29,7 +29,7 @@ extension ReadingStore: DependencyKey {
                     return
                 }
                 try await healthKit.save(reading)
-                $readings.withLock { $0[id: reading.id]?.savedToHealth = true }
+                $readings.withLock { readings in readings[id: reading.id]?.savedToHealth = true }
             } catch {
                 $healthWarning.withLock { $0 = "Saved on this iPhone, but Apple Health didn't accept it." }
             }
