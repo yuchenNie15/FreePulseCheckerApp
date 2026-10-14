@@ -2,13 +2,14 @@ import ComposableArchitecture
 import Foundation
 
 /** Turns camera frames and motion samples into a live `snapshot` and, at the end, a `PulseSummary`.
-- `snapshot` refreshes every 0.25 s of frame time; nothing else in the state is observed.
+- `snapshot.waveform` refreshes every frame; the rest of `snapshot` every 0.25 s of frame time. Nothing else is observed.
 - Red and green are processed in parallel; the one with the higher spectral SNR is used, re-chosen every 2 s. */
 @Reducer
 public struct PulseAnalysis: Sendable {
     public static let bpmSampleRate = 30.0
     public static let estimationWindow: TimeInterval = 8
     public static let snapshotInterval: TimeInterval = 0.25
+    public static let waveformSeconds: TimeInterval = 4
 
     @ObservableState
     public struct State: Equatable, Sendable {
@@ -77,9 +78,21 @@ public struct PulseAnalysis: Sendable {
             state.latestPerfusion = nil
         }
 
-        if let last = state.lastSnapshotTime, frame.timestamp - last < snapshotInterval { return }
+        if let last = state.lastSnapshotTime, frame.timestamp - last < snapshotInterval {
+            if state.snapshot.fingerState.isOnLens, fingerState.isOnLens {
+                state.snapshot.waveform = liveWaveform(state)
+            }
+            return
+        }
         state.lastSnapshotTime = frame.timestamp
         state.snapshot = snapshot(&state)
+    }
+
+    /// One point per frame, so each per-frame refresh scrolls the line by exactly one point.
+    private static func liveWaveform(_ state: State) -> [Double] {
+        let channel = state.selected == .red ? state.red : state.green
+        let recent = Stats.suffix(of: channel.filtered, from: state.latestTime - waveformSeconds)
+        return Waveform.displayPoints(recent.map(\.value), count: Int(waveformSeconds * state.captureRate))
     }
 
     private static func snapshot(_ state: inout State) -> PulseSnapshot {
@@ -90,8 +103,8 @@ public struct PulseAnalysis: Sendable {
         let channel = state.selected == .red ? state.red : state.green
         let windowStart = state.latestTime - estimationWindow
         let filtered = Stats.suffix(of: channel.filtered, from: windowStart)
-        let recent = Stats.suffix(of: filtered, from: state.latestTime - 4)
-        let waveform = Waveform.displayPoints(recent.map(\.value), count: 120)
+        let recent = Stats.suffix(of: filtered, from: state.latestTime - waveformSeconds)
+        let waveform = liveWaveform(state)
         state.latestPerfusion = perfusionIndex(recent)
 
         let bpmWindow = Stats.suffix(of: channel.bpmSeries, from: windowStart)
