@@ -1,0 +1,5 @@
+// Shared by the unit and snapshot test bundles, both hosted by the app.
+BUNDLE_LOADER = $(TEST_HOST)
+TEST_HOST = $(BUILT_PRODUCTS_DIR)/FreePulseCheck.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FreePulseCheck
+GENERATE_INFOPLIST_FILE = YES
+SWIFT_EMIT_LOC_STRINGS = NO

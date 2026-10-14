@@ -7,17 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F1C00000000000000000A000 /* AppClients in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B000 /* AppClients */; };
-		F1C00000000000000000A001 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B001 /* DesignSystem */; };
-		F1C00000000000000000A002 /* HealthKitClient in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B002 /* HealthKitClient */; };
-		F1C00000000000000000A003 /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B003 /* Models */; };
-		F1C00000000000000000A004 /* PulseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B004 /* PulseEngine */; };
-		F1C00000000000000000A005 /* PulseSourceClient in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B005 /* PulseSourceClient */; };
-		F1C00000000000000000A006 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = F1C00000000000000000B006 /* ComposableArchitecture */; };
+		F1C000000000000000000200 /* AppClients in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000300 /* AppClients */; };
+		F1C000000000000000000201 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000301 /* DesignSystem */; };
+		F1C000000000000000000202 /* HealthKitClient in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000302 /* HealthKitClient */; };
+		F1C000000000000000000203 /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000303 /* Models */; };
+		F1C000000000000000000204 /* PulseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000304 /* PulseEngine */; };
+		F1C000000000000000000205 /* PulseSourceClient in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000305 /* PulseSourceClient */; };
+		F1C000000000000000000206 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000306 /* ComposableArchitecture */; };
+		F1C000000000000000000220 /* SnapshotTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = F1C000000000000000000320 /* SnapshotTestSupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		F1C000000000000000000046 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1C000000000000000000050 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1C000000000000000000040;
+			remoteInfo = FreePulseCheck;
+		};
+		F1C00000000000000000004B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F1C000000000000000000050 /* Project object */;
 			proxyType = 1;
@@ -29,17 +37,85 @@
 /* Begin PBXFileReference section */
 		F1C000000000000000000010 /* FreePulseCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreePulseCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1C000000000000000000011 /* FreePulseCheckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreePulseCheckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1C000000000000000000012 /* FreePulseCheckSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreePulseCheckSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1C000000000000000000100 /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000101 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000102 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000103 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000104 /* HostedTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HostedTests.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000105 /* UnitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UnitTests.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000106 /* SnapshotTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SnapshotTests.xcconfig; sourceTree = "<group>"; };
+		F1C000000000000000000120 /* FreePulseCheck.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FreePulseCheck.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F1C0000000000000000000E1 /* Exceptions for "App" folder in "FreePulseCheck" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Core/SnapshotTestSupport/AppPreviewSnapshots+AssertSnapshots.swift",
+				"Features/AppFeature/AppFeatureTests.swift",
+				"Features/AppFeature/AppViewSnapshotTests.swift",
+				"Features/History/HistoryFeatureTests.swift",
+				"Features/Measure/MeasureFeatureTests.swift",
+				"Features/Measurement/MeasurementFeatureTests.swift",
+				"Features/Settings/SettingsFeatureTests.swift",
+			);
+			target = F1C000000000000000000040 /* FreePulseCheck */;
+		};
+		F1C0000000000000000000E2 /* Exceptions for "App" folder in "FreePulseCheckTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Assets.xcassets",
+				"Core/SnapshotTestSupport/AppPreviewSnapshots+AssertSnapshots.swift",
+				"Features/AppFeature/AppFeature.swift",
+				"Features/AppFeature/AppViewSnapshotTests.swift",
+				"Features/History/HistoryFeature.swift",
+				"Features/History/HistoryView.swift",
+				"Features/Measure/MeasureFeature.swift",
+				"Features/Measurement/MeasurementFeature.swift",
+				"Features/Measurement/MeasurementView.swift",
+				"Features/Settings/License.swift",
+				"Features/Settings/LicenseTexts.swift",
+				"Features/Settings/SettingsFeature.swift",
+				"Features/Settings/SettingsView.swift",
+				"FreePulseCheckApp.swift",
+			);
+			target = F1C000000000000000000043 /* FreePulseCheckTests */;
+		};
+		F1C0000000000000000000E3 /* Exceptions for "App" folder in "FreePulseCheckSnapshotTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Assets.xcassets",
+				"Features/AppFeature/AppFeature.swift",
+				"Features/AppFeature/AppFeatureTests.swift",
+				"Features/History/HistoryFeature.swift",
+				"Features/History/HistoryFeatureTests.swift",
+				"Features/History/HistoryView.swift",
+				"Features/Measure/MeasureFeature.swift",
+				"Features/Measure/MeasureFeatureTests.swift",
+				"Features/Measurement/MeasurementFeature.swift",
+				"Features/Measurement/MeasurementFeatureTests.swift",
+				"Features/Measurement/MeasurementView.swift",
+				"Features/Settings/License.swift",
+				"Features/Settings/LicenseTexts.swift",
+				"Features/Settings/SettingsFeature.swift",
+				"Features/Settings/SettingsFeatureTests.swift",
+				"Features/Settings/SettingsView.swift",
+				"FreePulseCheckApp.swift",
+			);
+			target = F1C000000000000000000048 /* FreePulseCheckSnapshotTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F1C000000000000000000020 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F1C0000000000000000000E1 /* Exceptions for "App" folder in "FreePulseCheck" target */,
+				F1C0000000000000000000E2 /* Exceptions for "App" folder in "FreePulseCheckTests" target */,
+				F1C0000000000000000000E3 /* Exceptions for "App" folder in "FreePulseCheckSnapshotTests" target */,
+			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		F1C000000000000000000021 /* AppTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AppTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -49,13 +125,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1C00000000000000000A000 /* AppClients in Frameworks */,
-				F1C00000000000000000A001 /* DesignSystem in Frameworks */,
-				F1C00000000000000000A002 /* HealthKitClient in Frameworks */,
-				F1C00000000000000000A003 /* Models in Frameworks */,
-				F1C00000000000000000A004 /* PulseEngine in Frameworks */,
-				F1C00000000000000000A005 /* PulseSourceClient in Frameworks */,
-				F1C00000000000000000A006 /* ComposableArchitecture in Frameworks */,
+				F1C000000000000000000200 /* AppClients in Frameworks */,
+				F1C000000000000000000201 /* DesignSystem in Frameworks */,
+				F1C000000000000000000202 /* HealthKitClient in Frameworks */,
+				F1C000000000000000000203 /* Models in Frameworks */,
+				F1C000000000000000000204 /* PulseEngine in Frameworks */,
+				F1C000000000000000000205 /* PulseSourceClient in Frameworks */,
+				F1C000000000000000000206 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +142,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1C000000000000000000032 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1C000000000000000000220 /* SnapshotTestSupport in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -73,9 +157,24 @@
 			isa = PBXGroup;
 			children = (
 				F1C000000000000000000020 /* App */,
-				F1C000000000000000000021 /* AppTests */,
+				F1C000000000000000000130 /* Config */,
 				F1C000000000000000000002 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		F1C000000000000000000130 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				F1C000000000000000000100 /* Project.xcconfig */,
+				F1C000000000000000000101 /* Debug.xcconfig */,
+				F1C000000000000000000102 /* Release.xcconfig */,
+				F1C000000000000000000103 /* App.xcconfig */,
+				F1C000000000000000000104 /* HostedTests.xcconfig */,
+				F1C000000000000000000105 /* UnitTests.xcconfig */,
+				F1C000000000000000000106 /* SnapshotTests.xcconfig */,
+				F1C000000000000000000120 /* FreePulseCheck.entitlements */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		F1C000000000000000000002 /* Products */ = {
@@ -83,6 +182,7 @@
 			children = (
 				F1C000000000000000000010 /* FreePulseCheck.app */,
 				F1C000000000000000000011 /* FreePulseCheckTests.xctest */,
+				F1C000000000000000000012 /* FreePulseCheckSnapshotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,13 +207,13 @@
 			);
 			name = FreePulseCheck;
 			packageProductDependencies = (
-				F1C00000000000000000B000 /* AppClients */,
-				F1C00000000000000000B001 /* DesignSystem */,
-				F1C00000000000000000B002 /* HealthKitClient */,
-				F1C00000000000000000B003 /* Models */,
-				F1C00000000000000000B004 /* PulseEngine */,
-				F1C00000000000000000B005 /* PulseSourceClient */,
-				F1C00000000000000000B006 /* ComposableArchitecture */,
+				F1C000000000000000000300 /* AppClients */,
+				F1C000000000000000000301 /* DesignSystem */,
+				F1C000000000000000000302 /* HealthKitClient */,
+				F1C000000000000000000303 /* Models */,
+				F1C000000000000000000304 /* PulseEngine */,
+				F1C000000000000000000305 /* PulseSourceClient */,
+				F1C000000000000000000306 /* ComposableArchitecture */,
 			);
 			productName = FreePulseCheck;
 			productReference = F1C000000000000000000010 /* FreePulseCheck.app */;
@@ -133,11 +233,37 @@
 				F1C000000000000000000047 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				F1C000000000000000000021 /* AppTests */,
+				F1C000000000000000000020 /* App */,
 			);
 			name = FreePulseCheckTests;
+			packageProductDependencies = (
+			);
 			productName = FreePulseCheckTests;
 			productReference = F1C000000000000000000011 /* FreePulseCheckTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F1C000000000000000000048 /* FreePulseCheckSnapshotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1C000000000000000000090 /* Build configuration list for PBXNativeTarget "FreePulseCheckSnapshotTests" */;
+			buildPhases = (
+				F1C000000000000000000049 /* Sources */,
+				F1C000000000000000000032 /* Frameworks */,
+				F1C00000000000000000004A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1C00000000000000000004C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F1C000000000000000000020 /* App */,
+			);
+			name = FreePulseCheckSnapshotTests;
+			packageProductDependencies = (
+				F1C000000000000000000320 /* SnapshotTestSupport */,
+			);
+			productName = FreePulseCheckSnapshotTests;
+			productReference = F1C000000000000000000012 /* FreePulseCheckSnapshotTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -157,6 +283,10 @@
 						CreatedOnToolsVersion = 27.3;
 						TestTargetID = F1C000000000000000000040;
 					};
+					F1C000000000000000000048 = {
+						CreatedOnToolsVersion = 27.3;
+						TestTargetID = F1C000000000000000000040;
+					};
 				};
 			};
 			buildConfigurationList = F1C000000000000000000070 /* Build configuration list for PBXProject "FreePulseCheck" */;
@@ -171,6 +301,7 @@
 			packageReferences = (
 				F1C0000000000000000000C1 /* XCLocalSwiftPackageReference "FreePulseKit" */,
 				F1C0000000000000000000C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				F1C0000000000000000000C3 /* XCLocalSwiftPackageReference "Vendor/swift-snapshot-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F1C000000000000000000002 /* Products */;
@@ -179,6 +310,7 @@
 			targets = (
 				F1C000000000000000000040 /* FreePulseCheck */,
 				F1C000000000000000000043 /* FreePulseCheckTests */,
+				F1C000000000000000000048 /* FreePulseCheckSnapshotTests */,
 			);
 		};
 /* End PBXProject section */
@@ -192,6 +324,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F1C000000000000000000045 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1C00000000000000000004A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -215,6 +354,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1C000000000000000000049 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -223,174 +369,87 @@
 			target = F1C000000000000000000040 /* FreePulseCheck */;
 			targetProxy = F1C000000000000000000046 /* PBXContainerItemProxy */;
 		};
+		F1C00000000000000000004C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1C000000000000000000040 /* FreePulseCheck */;
+			targetProxy = F1C00000000000000000004B /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		F1C000000000000000000061 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Config/FreePulseCheck.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Free Pulse Check";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Free Pulse Check uses the rear camera and flash to see the pulse in your fingertip.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Free Pulse Check saves your heart rate and heart rate variability to Apple Health when you choose to.";
-				INFOPLIST_KEY_NSMotionUsageDescription = "Free Pulse Check uses motion to discard readings taken while the phone moves.";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "camera-flash";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuchennie.FreePulseCheck;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		F1C000000000000000000062 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Config/FreePulseCheck.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Free Pulse Check";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Free Pulse Check uses the rear camera and flash to see the pulse in your fingertip.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Free Pulse Check saves your heart rate and heart rate variability to Apple Health when you choose to.";
-				INFOPLIST_KEY_NSMotionUsageDescription = "Free Pulse Check uses motion to discard readings taken while the phone moves.";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "camera-flash";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuchennie.FreePulseCheck;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
 		F1C000000000000000000071 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000101 /* Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
 		F1C000000000000000000072 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000102 /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_VERSION = 6.0;
-				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F1C000000000000000000061 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000103 /* App.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		F1C000000000000000000062 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000103 /* App.xcconfig */;
+			buildSettings = {
 			};
 			name = Release;
 		};
 		F1C000000000000000000081 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000105 /* UnitTests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuchennie.FreePulseCheckTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FreePulseCheck.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FreePulseCheck";
 			};
 			name = Debug;
 		};
 		F1C000000000000000000082 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000105 /* UnitTests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuchennie.FreePulseCheckTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FreePulseCheck.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FreePulseCheck";
+			};
+			name = Release;
+		};
+		F1C000000000000000000091 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000106 /* SnapshotTests.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		F1C000000000000000000092 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1C000000000000000000106 /* SnapshotTests.xcconfig */;
+			buildSettings = {
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F1C000000000000000000060 /* Build configuration list for PBXNativeTarget "FreePulseCheck" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F1C000000000000000000061 /* Debug */,
-				F1C000000000000000000062 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		F1C000000000000000000070 /* Build configuration list for PBXProject "FreePulseCheck" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1C000000000000000000071 /* Debug */,
 				F1C000000000000000000072 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1C000000000000000000060 /* Build configuration list for PBXNativeTarget "FreePulseCheck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1C000000000000000000061 /* Debug */,
+				F1C000000000000000000062 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -404,12 +463,25 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F1C000000000000000000090 /* Build configuration list for PBXNativeTarget "FreePulseCheckSnapshotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1C000000000000000000091 /* Debug */,
+				F1C000000000000000000092 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
 		F1C0000000000000000000C1 /* XCLocalSwiftPackageReference "FreePulseKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = FreePulseKit;
+		};
+		F1C0000000000000000000C3 /* XCLocalSwiftPackageReference "Vendor/swift-snapshot-testing" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "Vendor/swift-snapshot-testing";
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -425,34 +497,38 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F1C00000000000000000B000 /* AppClients */ = {
+		F1C000000000000000000300 /* AppClients */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppClients;
 		};
-		F1C00000000000000000B001 /* DesignSystem */ = {
+		F1C000000000000000000301 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesignSystem;
 		};
-		F1C00000000000000000B002 /* HealthKitClient */ = {
+		F1C000000000000000000302 /* HealthKitClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HealthKitClient;
 		};
-		F1C00000000000000000B003 /* Models */ = {
+		F1C000000000000000000303 /* Models */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Models;
 		};
-		F1C00000000000000000B004 /* PulseEngine */ = {
+		F1C000000000000000000304 /* PulseEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PulseEngine;
 		};
-		F1C00000000000000000B005 /* PulseSourceClient */ = {
+		F1C000000000000000000305 /* PulseSourceClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PulseSourceClient;
 		};
-		F1C00000000000000000B006 /* ComposableArchitecture */ = {
+		F1C000000000000000000306 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F1C0000000000000000000C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		F1C000000000000000000320 /* SnapshotTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SnapshotTestSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

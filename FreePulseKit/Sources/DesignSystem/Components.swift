@@ -174,3 +174,19 @@ public enum ReadingDateFormatter {
         return date.formatted(.dateTime.month(.abbreviated).day())
     }
 }
+
+internal struct HRVChip_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Double?> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "With RMSSD", state: 42),
+                .init(name: "Unavailable", state: nil),
+            ],
+            configure: { rmssd in HRVChip(rmssd: rmssd).padding().background(Color.background) }
+        )
+    }
+}

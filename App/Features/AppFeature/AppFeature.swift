@@ -7,12 +7,15 @@ import SwiftUI
 internal struct AppFeature: Sendable {
     @ObservableState
     internal struct State: Equatable, Sendable {
-        @Shared(.selectedTab) internal var selectedTab
+        @Shared internal var selectedTab: AppTab
         internal var measure = MeasureFeature.State()
         internal var history = HistoryFeature.State()
         internal var settings = SettingsFeature.State()
 
-        internal init() {}
+        /// - Parameter selectedTab: Defaults to the app-wide key that `AppNavigator` writes; previews pass `Shared(value:)`.
+        internal init(selectedTab: Shared<AppTab> = Shared(.selectedTab)) {
+            _selectedTab = selectedTab
+        }
     }
 
     internal enum Action: Equatable, Sendable {
@@ -61,5 +64,24 @@ internal struct AppView: View {
         }
         .tint(.accentStart)
         .preferredColorScheme(.dark)
+    }
+}
+
+internal struct AppView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<AppTab> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Measure", state: .measure),
+                .init(name: "History", state: .history),
+                .init(name: "Settings", state: .settings),
+            ],
+            configure: { tab in
+                AppView(store: Store(initialState: AppFeature.State(selectedTab: Shared(value: tab))) { EmptyReducer() })
+            }
+        )
     }
 }

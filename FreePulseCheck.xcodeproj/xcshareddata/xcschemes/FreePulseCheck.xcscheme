@@ -14,6 +14,10 @@
             <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000043" BuildableName = "FreePulseCheckTests.xctest" BlueprintName = "FreePulseCheckTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference skipped = "NO">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000048" BuildableName = "FreePulseCheckSnapshotTests.xctest" BlueprintName = "FreePulseCheckSnapshotTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction buildConfiguration = "Debug" selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB" launchStyle = "0" useCustomWorkingDirectory = "NO" ignoresPersistentStateOnLaunch = "NO" debugDocumentVersioning = "YES" debugServiceExtension = "internal" allowLocationSimulation = "YES">

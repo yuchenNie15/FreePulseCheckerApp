@@ -1,0 +1,4 @@
+#include "HostedTests.xcconfig"
+
+PRODUCT_NAME = FreePulseCheckSnapshotTests
+PRODUCT_BUNDLE_IDENTIFIER = $(BUNDLE_ID_PREFIX).FreePulseCheckSnapshotTests

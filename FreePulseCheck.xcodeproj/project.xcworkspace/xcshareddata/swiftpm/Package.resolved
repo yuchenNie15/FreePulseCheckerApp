@@ -1,5 +1,5 @@
 {
-  "originHash" : "0ca334618930f85e4c45725d9c6c7bb0ff705608c8bdacfccfbaa628257b0931",
+  "originHash" : "47acdce457870aa96eb2bf029ba6042d6f257bb76145555ab5c07acf38498de6",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -125,6 +125,15 @@
       "state" : {
         "revision" : "050f1a346fbbac0ca2cfb15a95274f7bd1cf0ccf",
         "version" : "604.0.0"
+      }
+    },
+    {
+      "identity" : "swiftui-preview-snapshots",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/doordash-oss/swiftui-preview-snapshots",
+      "state" : {
+        "revision" : "36cd3662a48ef75cc13eae182d468178279a0445",
+        "version" : "1.1.1"
       }
     }
   ],

@@ -13,18 +13,29 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
         .library(name: "PulseEngine", targets: ["PulseEngine"]),
         .library(name: "PulseSourceClient", targets: ["PulseSourceClient"]),
+        .library(name: "SnapshotTestSupport", targets: ["SnapshotTestSupport"]),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.26.2"),
+        .package(url: "https://github.com/doordash-oss/swiftui-preview-snapshots", from: "1.1.1"),
+        .package(path: "../Vendor/swift-snapshot-testing"),
     ],
     targets: [
         .target(name: "PulseEngine", dependencies: [tca]),
         .target(name: "Models", dependencies: ["PulseEngine", tca]),
-        .target(name: "DesignSystem", dependencies: ["Models", "PulseEngine"]),
+        .target(
+            name: "DesignSystem",
+            dependencies: ["Models", "PulseEngine", .product(name: "PreviewSnapshots", package: "swiftui-preview-snapshots")]
+        ),
         .target(name: "PulseSourceClient", dependencies: ["PulseEngine", tca]),
         .target(name: "HealthKitClient", dependencies: ["Models", tca]),
         .target(name: "AppClients", dependencies: ["HealthKitClient", "Models", tca]),
+        .target(
+            name: "SnapshotTestSupport",
+            dependencies: [.product(name: "SnapshotTesting", package: "swift-snapshot-testing")]
+        ),
 
         .testTarget(name: "PulseEngineTests", dependencies: ["PulseEngine", tca]),
+        .testTarget(name: "DesignSystemSnapshotTests", dependencies: ["DesignSystem", "Models", "SnapshotTestSupport"]),
     ]
 )
