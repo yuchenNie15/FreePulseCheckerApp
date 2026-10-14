@@ -24,3 +24,28 @@ internal struct ReadingDetailView: View {
         .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
+
+internal struct ReadingDetailView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<PulseReading> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Good, with HRV, saved to Health", state: HistoryPreviewFixtures.todayGood),
+                .init(name: "Fair, no HRV, not saved to Health", state: HistoryPreviewFixtures.todayFairNoHRV),
+                .init(name: "Poor, with HRV, saved to Health", state: HistoryPreviewFixtures.yesterdayPoor),
+                .init(
+                    name: "No waveform",
+                    state: HistoryPreviewFixtures.reading(7, minutesAgo: 20, bpm: 72, quality: .good, hrv: (42, 51), hasWaveform: false)
+                ),
+            ],
+            configure: { reading in
+                NavigationStack {
+                    ReadingDetailView(reading: reading)
+                }
+            }
+        )
+    }
+}

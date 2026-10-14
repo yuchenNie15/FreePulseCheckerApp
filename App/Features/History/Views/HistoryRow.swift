@@ -52,3 +52,45 @@ internal struct HistoryRow: View {
         }
     }
 }
+
+internal struct HistoryRowPreviewState {
+    internal var reading: PulseReading
+    internal var day: HistorySection.Day
+
+    internal init(reading: PulseReading, day: HistorySection.Day) {
+        self.reading = reading
+        self.day = day
+    }
+}
+
+internal struct HistoryRow_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<HistoryRowPreviewState> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Good, with HRV, today", state: .init(reading: HistoryPreviewFixtures.todayGood, day: .today)),
+                .init(name: "Fair, no HRV, today", state: .init(reading: HistoryPreviewFixtures.todayFairNoHRV, day: .today)),
+                .init(name: "Poor, three-digit BPM, yesterday", state: .init(reading: HistoryPreviewFixtures.yesterdayPoor, day: .yesterday)),
+                .init(name: "Fair, with HRV, earlier", state: .init(reading: HistoryPreviewFixtures.earlierFair, day: .earlier)),
+                .init(
+                    name: "Good, no HRV, three-digit BPM, earlier",
+                    state: .init(reading: HistoryPreviewFixtures.earlierGoodThreeDigit, day: .earlier)
+                ),
+            ],
+            configure: { state in
+                HistoryRow(
+                    reading: state.reading,
+                    day: state.day,
+                    now: HistoryPreviewFixtures.now,
+                    calendar: HistoryPreviewFixtures.calendar
+                )
+                .padding(.horizontal)
+                .frame(width: 358)
+                .background(Color.surface)
+            }
+        )
+    }
+}

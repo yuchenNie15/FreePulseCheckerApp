@@ -28,3 +28,24 @@ internal struct ReadingHealthStatusCard: View {
         .card()
     }
 }
+
+internal struct ReadingHealthStatusCard_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Bool> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Saved to Health", state: true),
+                .init(name: "Not saved to Health", state: false),
+            ],
+            configure: { savedToHealth in
+                ReadingHealthStatusCard(date: HistoryPreviewFixtures.todayGood.date, savedToHealth: savedToHealth)
+                    .frame(width: 358)
+                    .padding()
+                    .background(Color.background)
+            }
+        )
+    }
+}

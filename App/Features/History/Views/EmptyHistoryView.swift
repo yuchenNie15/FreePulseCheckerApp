@@ -22,3 +22,24 @@ internal struct EmptyHistoryView: View {
         .padding(Metrics.screenMargin)
     }
 }
+
+internal struct EmptyHistoryView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<DynamicTypeSize> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: .large),
+                .init(name: "Accessibility 3 text", state: .accessibility3),
+            ],
+            configure: { dynamicTypeSize in
+                EmptyHistoryView()
+                    .environment(\.dynamicTypeSize, dynamicTypeSize)
+                    .frame(width: 390)
+                    .background(Color.background)
+            }
+        )
+    }
+}

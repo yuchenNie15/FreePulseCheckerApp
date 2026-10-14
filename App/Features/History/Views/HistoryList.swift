@@ -56,3 +56,35 @@ internal struct HistoryList: View {
         .scrollContentBackground(.hidden)
     }
 }
+
+internal struct HistoryList_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<[PulseReading]> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "One section", state: HistoryPreviewFixtures.todayOnly),
+                .init(name: "Two sections", state: HistoryPreviewFixtures.todayAndYesterday),
+                .init(name: "Three sections", state: HistoryPreviewFixtures.allSections),
+                .init(name: "Many rows in one section", state: HistoryPreviewFixtures.manyToday),
+            ],
+            configure: { readings in
+                HistoryList(
+                    sections: HistorySection.group(
+                        readings,
+                        now: HistoryPreviewFixtures.now,
+                        calendar: HistoryPreviewFixtures.calendar
+                    ),
+                    now: HistoryPreviewFixtures.now,
+                    calendar: HistoryPreviewFixtures.calendar,
+                    onRowTapped: { _ in },
+                    onDeleteSwiped: { _ in }
+                )
+                .frame(width: 390, height: 760)
+                .background(Color.background)
+            }
+        )
+    }
+}

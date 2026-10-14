@@ -14,7 +14,16 @@ internal struct HistoryFeature: Sendable {
         internal var now: Date?
         internal var calendar: Calendar
 
-        internal init(now: Date? = nil, calendar: Calendar = .autoupdatingCurrent) {
+        internal init(
+            readings: Shared<IdentifiedArrayOf<PulseReading>> = Shared(.readings),
+            selectedReadingID: Shared<PulseReading.ID?> = Shared(.selectedReadingID),
+            alert: AlertState<Action.Alert>? = nil,
+            now: Date? = nil,
+            calendar: Calendar = .autoupdatingCurrent
+        ) {
+            _readings = readings
+            _selectedReadingID = selectedReadingID
+            self.alert = alert
             self.now = now
             self.calendar = calendar
         }
@@ -92,7 +101,7 @@ internal struct HistoryFeature: Sendable {
 }
 
 extension AlertState where Action == HistoryFeature.Action.Alert {
-    fileprivate static func deleteReading(id: PulseReading.ID) -> Self {
+    internal static func deleteReading(id: PulseReading.ID) -> Self {
         Self {
             TextState("Delete this reading?")
         } actions: {
