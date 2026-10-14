@@ -50,6 +50,7 @@ internal struct MeasureFeature: Sendable {
     @Dependency(\.appNavigator) private var appNavigator
     @Dependency(\.cameraPermission) private var cameraPermission
     @Dependency(\.date) private var date
+    @Dependency(\.log) private var log
     @Dependency(\.openURL) private var openURL
     @Dependency(\.pulseSource) private var pulseSource
 
@@ -63,58 +64,78 @@ internal struct MeasureFeature: Sendable {
                 return .none
 
             case let .cameraPermissionResponse(granted):
-                present(&state, granted: granted)
-                return .none
+                return .merge(
+                    log.info(.measure, "Camera permission \(granted ? "granted" : "refused")"),
+                    present(&state, granted: granted)
+                )
 
             case .healthWarningDismissed:
                 state.$healthWarning.withLock { $0 = nil }
-                return .none
+                return log.debug(.measure, "Health warning dismissed")
+
+            case .measurement(.dismiss):
+                return log.info(.measure, "Measurement dismissed")
 
             case .measurement:
                 return .none
 
             case .onAppear:
                 state.now = date.now
-                return .none
+                return log.debug(.measure, "Appeared with \(state.readings.count) readings")
 
             case .openSettingsTapped:
                 state.isCameraDeniedPresented = false
-                return .run { _ in
-                    let url = await MainActor.run { URL(string: UIApplication.openSettingsURLString) }
-                    if let url {
-                        await openURL(url)
+                return .merge(
+                    log.info(.measure, "Opening Settings for camera access"),
+                    .run { _ in
+                        let url = await MainActor.run { URL(string: UIApplication.openSettingsURLString) }
+                        if let url {
+                            await openURL(url)
+                        }
                     }
-                }
+                )
 
             case let .readingTapped(id):
-                return .run { _ in appNavigator.showReading(id) }
+                return .merge(
+                    log.debug(.measure, "Recent reading tapped: \(id)"),
+                    .run { _ in appNavigator.showReading(id) }
+                )
 
             case .seeAllTapped:
-                return .run { _ in appNavigator.showHistory() }
+                return .merge(
+                    log.debug(.measure, "See all tapped"),
+                    .run { _ in appNavigator.showHistory() }
+                )
 
             case .startTapped:
-                switch cameraPermission.status() {
+                let status = cameraPermission.status()
+                let logStart: Effect<Action> = log.info(.measure, "Start tapped, camera \(status)")
+                switch status {
                 case .authorized:
-                    present(&state, granted: true)
-                    return .none
+                    return .merge(logStart, present(&state, granted: true))
                 case .denied:
-                    present(&state, granted: false)
-                    return .none
+                    return .merge(logStart, present(&state, granted: false))
                 case .notDetermined:
-                    return .run { send in
-                        await send(.cameraPermissionResponse(granted: cameraPermission.request()))
-                    }
+                    return .merge(
+                        logStart,
+                        .run { send in
+                            await send(.cameraPermissionResponse(granted: cameraPermission.request()))
+                        }
+                    )
                 }
             }
         }
         .ifLet(\.$measurement, action: \.measurement) { MeasurementFeature() }
     }
 
-    private func present(_ state: inout State, granted: Bool) {
+    private func present(_ state: inout State, granted: Bool) -> Effect<Action> {
         if granted {
-            state.measurement = MeasurementFeature.State(captureRate: pulseSource.captureRate())
+            let captureRate = pulseSource.captureRate()
+            state.measurement = MeasurementFeature.State(captureRate: captureRate)
+            return log.info(.measure, "Presenting measurement at \(captureRate) fps")
         } else {
             state.isCameraDeniedPresented = true
+            return log.info(.measure, "Camera denied, showing the denied sheet")
         }
     }
 }

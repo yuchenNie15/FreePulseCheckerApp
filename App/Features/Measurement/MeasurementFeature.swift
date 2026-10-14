@@ -48,6 +48,7 @@ internal struct MeasurementFeature: Sendable {
     @Dependency(\.continuousClock) internal var clock
     @Dependency(\.date.now) private var now
     @Dependency(\.dismiss) internal var dismiss
+    @Dependency(\.log) internal var log
     @Dependency(\.pulseAnalyzer) internal var pulseAnalyzer
     @Dependency(\.pulseSource) internal var pulseSource
     @Dependency(\.readingStore) private var readingStore
@@ -61,7 +62,7 @@ internal struct MeasurementFeature: Sendable {
         Reduce { state, action in
             switch action {
             case .alert(.presented(.stopTapped)):
-                return finish
+                return .merge(log.info(.measurement, "Stop confirmed"), finish)
 
             case .alert, .binding:
                 return .none
@@ -73,39 +74,46 @@ internal struct MeasurementFeature: Sendable {
                 return .none
 
             case .closeTapped:
+                let logClose: Effect<Action> = log.info(.measurement, "Close tapped while \(state.phase.logDescription)")
                 if state.phase.needsStopConfirmation {
                     state.alert = .stopMeasuring
-                    return .none
+                    return logClose
                 }
-                return finish
+                return .merge(logClose, finish)
 
             case .discardTapped:
-                return finish
+                return .merge(log.info(.measurement, "Result discarded"), finish)
 
             case let .engineFailed(reason):
-                return fail(&state, reason)
+                return .merge(log.error(.measurement, "Engine failed: \(reason)"), fail(&state, reason))
 
             case .saveTapped:
                 guard case let .result(reading) = state.phase else { return .none }
-                return .run { [saveToHealth = state.saveToHealth] _ in
-                    await readingStore.save(reading, saveToHealth)
-                    await dismiss()
-                }
+                return .merge(
+                    log.info(.measurement, "Saving reading \(reading.id), saveToHealth: \(state.saveToHealth)"),
+                    .run { [saveToHealth = state.saveToHealth] _ in
+                        await readingStore.save(reading, saveToHealth)
+                        await dismiss()
+                    }
+                )
 
             case let .scenePhaseChanged(scenePhase):
                 guard scenePhase == .background, state.phase.isActive else { return .none }
-                return fail(&state, .interrupted)
+                return .merge(log.info(.measurement, "Backgrounded mid-measurement"), fail(&state, .interrupted))
 
             case let .summaryFinished(.success(summary)):
                 state.phase = .result(PulseReading(id: uuid(), date: now, summary: summary))
-                return .none
+                return log.info(.measurement, "Summary ready")
 
             case .summaryFinished(.failure):
                 state.phase = .failed(.unreliable)
-                return .none
+                return log.error(.measurement, "Summary unreliable")
 
             case .task:
-                return engine
+                return .merge(
+                    log.info(.measurement, "Starting pulse source at \(state.analysis.captureRate) fps"),
+                    engine
+                )
 
             case .timerTicked:
                 return tick(&state)
@@ -114,7 +122,15 @@ internal struct MeasurementFeature: Sendable {
                 state.phase = .preparing
                 state.remainingSeconds = Self.duration
                 state.pausedSeconds = 0
-                return .concatenate(.send(.analysis(.reset)), engine)
+                return .merge(
+                    log.info(.measurement, "Try again tapped"),
+                    .concatenate(.send(.analysis(.reset)), engine)
+                )
+            }
+        }
+        .onChange(of: \.phase.logDescription) { oldPhase, newPhase in
+            Reduce { _, _ in
+                log.info(.measurement, "Phase \(oldPhase) -> \(newPhase)")
             }
         }
         .ifLet(\.$alert, action: \.alert)

@@ -30,6 +30,19 @@ extension MeasurementFeature.Phase {
         }
     }
 
+    /// Names the phase without the reading a `.result` carries, so it is safe for the public log.
+    internal var logDescription: String {
+        switch self {
+        case .preparing: "preparing"
+        case .waitingForFinger: "waitingForFinger"
+        case .calibrating: "calibrating"
+        case .measuring: "measuring"
+        case .paused: "paused"
+        case .result: "result"
+        case let .failed(reason): "failed(\(reason))"
+        }
+    }
+
     internal var needsStopConfirmation: Bool {
         switch self {
         case .calibrating, .measuring, .paused: true

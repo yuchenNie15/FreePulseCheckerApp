@@ -56,6 +56,7 @@ internal struct HistoryFeature: Sendable {
 
     @Dependency(\.calendar) private var calendar
     @Dependency(\.date.now) private var now
+    @Dependency(\.log) private var log
     @Dependency(\.readingStore) private var readingStore
 
     internal init() {}
@@ -68,7 +69,7 @@ internal struct HistoryFeature: Sendable {
                 if state.selectedReadingID == id {
                     state.$selectedReadingID.withLock { $0 = nil }
                 }
-                return .none
+                return log.info(.history, "Deleted reading \(id)")
 
             case .alert:
                 return .none
@@ -76,24 +77,26 @@ internal struct HistoryFeature: Sendable {
             case let .deleteSwiped(id):
                 guard state.readings[id: id] != nil else { return .none }
                 state.alert = .deleteReading(id: id)
-                return .none
+                return log.debug(.history, "Delete requested for \(id)")
 
             case .onAppear:
                 state.now = now
                 state.calendar = calendar
-                if state.selectedReadingID != nil, state.selectedReading == nil {
+                let logAppear: Effect<Action> = log.debug(.history, "Appeared with \(state.readings.count) readings")
+                if let staleID = state.selectedReadingID, state.selectedReading == nil {
                     state.$selectedReadingID.withLock { $0 = nil }
+                    return .merge(logAppear, log.info(.history, "Cleared selection of missing reading \(staleID)"))
                 }
-                return .none
+                return logAppear
 
             case let .rowTapped(id):
                 guard state.readings[id: id] != nil else { return .none }
                 state.$selectedReadingID.withLock { $0 = id }
-                return .none
+                return log.debug(.history, "Opened reading \(id)")
 
             case let .selectionChanged(id):
                 state.$selectedReadingID.withLock { $0 = id }
-                return .none
+                return log.debug(.history, "Selection changed to \(id.map { "\($0)" } ?? "none")")
             }
         }
         .ifLet(\.$alert, action: \.alert)

@@ -57,6 +57,24 @@ import UIKit
         }
     }
 
+    @Test internal func startWithCameraDeniedLogsTheTapAndTheDeniedSheet() async {
+        let entries = LockIsolated<[LogEntry]>([])
+        let store = makeStore {
+            $0.cameraPermission.status = { .denied }
+            $0.log.write = { entry in entries.withValue { $0.append(entry) } }
+        }
+
+        await store.send(.startTapped) {
+            $0.isCameraDeniedPresented = true
+        }
+        await store.finish()
+
+        #expect(Set(entries.value.map(\.message)) == [
+            "Start tapped, camera denied",
+            "Camera denied, showing the denied sheet",
+        ])
+    }
+
     @Test internal func openSettingsOpensTheAppSettingsAndDismisses() async {
         let opened = LockIsolated<[URL]>([])
         var initialState = MeasureFeature.State()

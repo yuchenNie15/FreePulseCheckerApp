@@ -1,3 +1,4 @@
+import AppClients
 import ComposableArchitecture
 import Foundation
 import PulseSourceClient
@@ -19,6 +20,7 @@ extension MeasurementFeature {
                 }
             }
         } catch: { error, send in
+            log.write(LogEntry(.error, .measurement, "Pulse source threw: \(error)"))
             await send(.engineFailed(FailureReason(error)))
         }
         .cancellable(id: CancelID.engine, cancelInFlight: true)

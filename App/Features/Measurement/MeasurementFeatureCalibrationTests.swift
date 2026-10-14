@@ -21,6 +21,22 @@ extension MeasurementFeatureTests {
             }
         }
 
+        @Test internal func phaseChangeIsLogged() async {
+            let entries = LockIsolated<[LogEntry]>([])
+            let snapshots = LockIsolated(PulseSnapshot(fingerState: .present))
+            let store = makeStore(state(.waitingForFinger), snapshots: snapshots) {
+                $0.log.write = { entry in entries.withValue { $0.append(entry) } }
+            }
+
+            await store.send(.analysis(.frame(frame))) {
+                $0.analysis.snapshot = PulseSnapshot(fingerState: .present)
+                $0.phase = .calibrating
+            }
+            await store.finish()
+
+            #expect(entries.value == [LogEntry(.info, .measurement, "Phase waitingForFinger -> calibrating")])
+        }
+
         @Test(arguments: [FingerState.partial, .saturated, .tooDark, .tooMuchPressure])
         internal func fingerNotPresentKeepsWaiting(fingerState: FingerState) async {
             let snapshots = LockIsolated(PulseSnapshot(fingerState: fingerState))

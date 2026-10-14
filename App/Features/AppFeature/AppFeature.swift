@@ -24,6 +24,8 @@ internal struct AppFeature: Sendable {
         case tabSelected(AppTab)
     }
 
+    @Dependency(\.log) private var log
+
     internal init() {}
 
     internal var body: some ReducerOf<Self> {
@@ -34,7 +36,7 @@ internal struct AppFeature: Sendable {
             switch action {
             case let .tabSelected(tab):
                 state.$selectedTab.withLock { $0 = tab }
-                return .none
+                return log.debug(.app, "Tab selected: \(tab)")
             case .history, .measure, .settings:
                 return .none
             }
