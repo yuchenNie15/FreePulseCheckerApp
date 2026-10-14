@@ -27,7 +27,7 @@ let package = Package(
             name: "DesignSystem",
             dependencies: ["Models", "PulseEngine", .product(name: "PreviewSnapshots", package: "swiftui-preview-snapshots")]
         ),
-        .target(name: "PulseSourceClient", dependencies: ["PulseEngine", tca]),
+        .target(name: "PulseSourceClient", dependencies: ["AppClients", "PulseEngine", tca]),
         .target(name: "HealthKitClient", dependencies: ["Models", tca]),
         .target(name: "AppClients", dependencies: ["HealthKitClient", "Models", tca]),
         .target(
@@ -36,6 +36,7 @@ let package = Package(
         ),
 
         .testTarget(name: "PulseEngineTests", dependencies: ["PulseEngine", tca]),
+        .testTarget(name: "PulseSourceClientTests", dependencies: ["PulseEngine", "PulseSourceClient"]),
         .testTarget(name: "DesignSystemSnapshotTests", dependencies: ["DesignSystem", "Models", "SnapshotTestSupport"]),
     ]
 )

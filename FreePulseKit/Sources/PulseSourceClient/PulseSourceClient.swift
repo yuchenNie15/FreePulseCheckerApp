@@ -29,8 +29,8 @@ extension PulseSourceClient: DependencyKey {
         return .simulated(bpm: 72)
         #else
         return PulseSourceClient(
-            captureRate: { 60 },
-            events: { AsyncThrowingStream { $0.finish(throwing: PulseSourceError.cameraUnavailable) } }
+            captureRate: { CaptureFormat.rearCamera().flatMap(CaptureFormat.best)?.frameRate ?? 30 },
+            events: { CameraPipeline.stream() }
         )
         #endif
     }()
