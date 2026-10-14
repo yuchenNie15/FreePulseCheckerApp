@@ -68,3 +68,25 @@ internal struct MeasurementFailedView: View {
         }
     }
 }
+
+internal struct MeasurementFailedView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<MeasurementFeature.FailureReason> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Unreliable", state: .unreliable),
+                .init(name: "Finger lifted", state: .fingerLifted),
+                .init(name: "Camera unavailable", state: .cameraUnavailable),
+                .init(name: "Overheated", state: .overheated),
+                .init(name: "Interrupted", state: .interrupted),
+            ],
+            configure: { reason in
+                MeasurementFailedView(reason: reason, onTryAgain: {}, onClose: {})
+                    .measurementScreenPreview()
+            }
+        )
+    }
+}

@@ -22,3 +22,22 @@ internal struct ShimmerBar: View {
         }
     }
 }
+
+internal struct ShimmerBar_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: ()),
+            ],
+            configure: { _ in
+                ShimmerBar()
+                    .frame(height: 6)
+                    .measurementComponentPreview()
+            }
+        )
+    }
+}

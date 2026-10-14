@@ -24,3 +24,24 @@ internal struct SignalQualityChip: View {
         .background(Color.surfaceElevated, in: .capsule)
     }
 }
+
+internal struct SignalQualityChip_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<SignalQuality?> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Reading", state: nil),
+                .init(name: "Good", state: .good),
+                .init(name: "Fair", state: .fair),
+                .init(name: "Poor", state: .poor),
+            ],
+            configure: { quality in
+                SignalQualityChip(quality: quality)
+                    .measurementComponentPreview()
+            }
+        )
+    }
+}

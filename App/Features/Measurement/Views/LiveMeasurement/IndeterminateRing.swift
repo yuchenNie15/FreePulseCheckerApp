@@ -22,3 +22,22 @@ internal struct IndeterminateRing: View {
         }
     }
 }
+
+internal struct IndeterminateRing_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: ()),
+            ],
+            configure: { _ in
+                IndeterminateRing()
+                    .frame(width: 280, height: 280)
+                    .measurementComponentPreview(width: 280)
+            }
+        )
+    }
+}

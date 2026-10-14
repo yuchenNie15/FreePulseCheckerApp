@@ -17,3 +17,21 @@ internal struct CalibratingCaption: View {
         }
     }
 }
+
+internal struct CalibratingCaption_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Default", state: ()),
+            ],
+            configure: { _ in
+                CalibratingCaption()
+                    .measurementComponentPreview()
+            }
+        )
+    }
+}

@@ -25,3 +25,24 @@ internal struct LivePulseCard: View {
         .card()
     }
 }
+
+internal struct LivePulseCard_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<(waveform: [Double], isLive: Bool, isCalibrating: Bool)> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Live", state: (MeasurementScreensPreviewFixtures.waveform, true, false)),
+                .init(name: "Not live", state: (MeasurementScreensPreviewFixtures.waveform, false, false)),
+                .init(name: "Calibrating", state: (MeasurementScreensPreviewFixtures.waveform, false, true)),
+                .init(name: "Empty waveform", state: ([], true, false)),
+            ],
+            configure: { state in
+                LivePulseCard(waveform: state.waveform, isLive: state.isLive, isCalibrating: state.isCalibrating)
+                    .measurementComponentPreview()
+            }
+        )
+    }
+}

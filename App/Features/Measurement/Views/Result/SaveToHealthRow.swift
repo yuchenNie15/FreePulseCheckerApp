@@ -23,3 +23,22 @@ internal struct SaveToHealthRow: View {
         .card(padding: 18)
     }
 }
+
+internal struct SaveToHealthRow_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Bool> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "On", state: true),
+                .init(name: "Off", state: false),
+            ],
+            configure: { isOn in
+                SaveToHealthRow(isOn: .constant(isOn))
+                    .measurementComponentPreview()
+            }
+        )
+    }
+}

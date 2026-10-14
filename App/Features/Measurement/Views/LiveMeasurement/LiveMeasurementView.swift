@@ -44,3 +44,32 @@ internal struct LiveMeasurementView: View {
         }
     }
 }
+
+internal struct LiveMeasurementView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<(phase: MeasurementFeature.Phase, snapshot: PulseSnapshot, remainingSeconds: Int)> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Calibrating", state: (.calibrating, MeasurementScreensPreviewFixtures.snapshot(bpm: nil, quality: nil), 60)),
+                .init(name: "Measuring good signal", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(), 42)),
+                .init(name: "Measuring no BPM yet", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(bpm: nil, quality: nil), 55)),
+                .init(name: "Measuring fair signal", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(quality: .fair), 42)),
+                .init(name: "Measuring poor signal", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(quality: .poor), 42)),
+                .init(name: "Paused finger lifted", state: (.paused, MeasurementScreensPreviewFixtures.snapshot(fingerState: .absent), 42)),
+                .init(name: "Finger partial", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(fingerState: .partial), 42)),
+                .init(name: "Finger too much pressure", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(fingerState: .tooMuchPressure), 42)),
+                .init(name: "Finger saturated", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(fingerState: .saturated), 42)),
+                .init(name: "Finger too dark", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(fingerState: .tooDark), 42)),
+                .init(name: "Remaining 60", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(), 60)),
+                .init(name: "Remaining 1", state: (.measuring, MeasurementScreensPreviewFixtures.snapshot(), 1)),
+            ],
+            configure: { state in
+                LiveMeasurementView(phase: state.phase, snapshot: state.snapshot, remainingSeconds: state.remainingSeconds)
+                    .measurementScreenPreview()
+            }
+        )
+    }
+}

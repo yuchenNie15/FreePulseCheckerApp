@@ -30,3 +30,22 @@ internal struct FailureTipRow: View {
         .accessibilityElement(children: .combine)
     }
 }
+
+internal struct FailureTipRow_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<FailureTip> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Moved", state: .moved),
+                .init(name: "Lifted", state: .lifted),
+            ],
+            configure: { tip in
+                FailureTipRow(tip: tip)
+                    .measurementComponentPreview()
+            }
+        )
+    }
+}

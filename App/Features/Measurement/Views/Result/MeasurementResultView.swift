@@ -32,3 +32,24 @@ internal struct MeasurementResultView: View {
         }
     }
 }
+
+internal struct MeasurementResultView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<(reading: PulseReading, saveToHealth: Bool)> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Good with HRV health on", state: (MeasurementScreensPreviewFixtures.goodReading, true)),
+                .init(name: "Fair without HRV health off", state: (MeasurementScreensPreviewFixtures.fairReadingWithoutHRV, false)),
+                .init(name: "Poor", state: (MeasurementScreensPreviewFixtures.poorReading, true)),
+                .init(name: "Three-digit BPM", state: (MeasurementScreensPreviewFixtures.threeDigitReading, true)),
+            ],
+            configure: { state in
+                MeasurementResultView(reading: state.reading, saveToHealth: .constant(state.saveToHealth), onSave: {}, onDiscard: {})
+                    .measurementScreenPreview()
+            }
+        )
+    }
+}
