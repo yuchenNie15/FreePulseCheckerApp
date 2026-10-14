@@ -3,14 +3,14 @@ import DesignSystem
 import Models
 import SwiftUI
 
-public struct HistoryView: View {
+internal struct HistoryView: View {
     @Bindable private var store: StoreOf<HistoryFeature>
 
-    public init(store: StoreOf<HistoryFeature>) {
+    internal init(store: StoreOf<HistoryFeature>) {
         self.store = store
     }
 
-    public var body: some View {
+    internal var body: some View {
         NavigationStack {
             content
                 .screenBackground()

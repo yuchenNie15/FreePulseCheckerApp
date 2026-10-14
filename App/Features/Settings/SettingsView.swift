@@ -3,15 +3,15 @@ import DesignSystem
 import HealthKitClient
 import SwiftUI
 
-public struct SettingsView: View {
+internal struct SettingsView: View {
     @Bindable private var store: StoreOf<SettingsFeature>
     @Environment(\.scenePhase) private var scenePhase
 
-    public init(store: StoreOf<SettingsFeature>) {
+    internal init(store: StoreOf<SettingsFeature>) {
         self.store = store
     }
 
-    public var body: some View {
+    internal var body: some View {
         NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
             List {
                 healthSection

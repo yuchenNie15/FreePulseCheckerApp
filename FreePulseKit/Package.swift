@@ -7,8 +7,12 @@ let package = Package(
     name: "FreePulseKit",
     platforms: [.iOS(.v18)],
     products: [
-        .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "AppClients", targets: ["AppClients"]),
+        .library(name: "DesignSystem", targets: ["DesignSystem"]),
+        .library(name: "HealthKitClient", targets: ["HealthKitClient"]),
+        .library(name: "Models", targets: ["Models"]),
         .library(name: "PulseEngine", targets: ["PulseEngine"]),
+        .library(name: "PulseSourceClient", targets: ["PulseSourceClient"]),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.26.2"),
@@ -20,24 +24,7 @@ let package = Package(
         .target(name: "PulseSourceClient", dependencies: ["PulseEngine", tca]),
         .target(name: "HealthKitClient", dependencies: ["Models", tca]),
         .target(name: "AppClients", dependencies: ["HealthKitClient", "Models", tca]),
-        .target(
-            name: "MeasurementFeature",
-            dependencies: ["AppClients", "DesignSystem", "Models", "PulseEngine", "PulseSourceClient", tca]
-        ),
-        .target(
-            name: "MeasureFeature",
-            dependencies: ["AppClients", "DesignSystem", "MeasurementFeature", "Models", "PulseSourceClient", tca]
-        ),
-        .target(name: "HistoryFeature", dependencies: ["AppClients", "DesignSystem", "Models", tca]),
-        .target(name: "SettingsFeature", dependencies: ["AppClients", "DesignSystem", "HealthKitClient", tca]),
-        .target(name: "AppFeature", dependencies: ["AppClients", "DesignSystem", "HistoryFeature", "MeasureFeature", "SettingsFeature", tca]),
 
         .testTarget(name: "PulseEngineTests", dependencies: ["PulseEngine", tca]),
-        .testTarget(name: "PulseSourceClientTests", dependencies: ["PulseSourceClient", "PulseEngine"]),
-        .testTarget(name: "MeasurementFeatureTests", dependencies: ["MeasurementFeature", tca]),
-        .testTarget(name: "MeasureFeatureTests", dependencies: ["MeasureFeature", tca]),
-        .testTarget(name: "HistoryFeatureTests", dependencies: ["AppClients", "HistoryFeature", "Models", tca]),
-        .testTarget(name: "SettingsFeatureTests", dependencies: ["AppClients", "HealthKitClient", "SettingsFeature", tca]),
-        .testTarget(name: "AppFeatureTests", dependencies: ["AppClients", "AppFeature", tca]),
     ]
 )

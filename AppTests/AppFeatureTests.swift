@@ -1,7 +1,7 @@
 import AppClients
 import ComposableArchitecture
 import Testing
-@testable import AppFeature
+@testable import FreePulseCheck
 
 @MainActor
 @Suite struct AppFeatureTests {

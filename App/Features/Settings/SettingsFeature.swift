@@ -4,9 +4,9 @@ import Foundation
 import HealthKitClient
 
 @Reducer
-public struct SettingsFeature: Sendable {
+internal struct SettingsFeature: Sendable {
     @Reducer
-    public enum Path {
+    internal enum Path {
         case disclaimer
         case licenses
         @ReducerCaseIgnored
@@ -14,17 +14,17 @@ public struct SettingsFeature: Sendable {
     }
 
     @ObservableState
-    public struct State: Equatable, Sendable {
+    internal struct State: Equatable, Sendable {
         /// "0.1 (1)", loaded on `.task`.
-        public var appVersion: String?
+        internal var appVersion: String?
         /// Nil until the first refresh.
-        public var healthAccess: HealthAccess?
-        public var path = StackState<Path.State>()
+        internal var healthAccess: HealthAccess?
+        internal var path = StackState<Path.State>()
 
-        public init() {}
+        internal init() {}
     }
 
-    public enum Action: Equatable, Sendable {
+    internal enum Action: Equatable, Sendable {
         case authorizationCompleted
         case healthRowTapped
         case path(StackActionOf<Path>)
@@ -36,9 +36,9 @@ public struct SettingsFeature: Sendable {
     @Dependency(\.healthKit) private var healthKit
     @Dependency(\.openURL) private var openURL
 
-    public init() {}
+    internal init() {}
 
-    public var body: some ReducerOf<Self> {
+    internal var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .task:

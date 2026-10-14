@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Foundation
 import Models
 import Testing
-@testable import HistoryFeature
+@testable import FreePulseCheck
 
 @MainActor
 @Suite struct HistoryFeatureTests {

@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Foundation
 import HealthKitClient
 import Testing
-@testable import SettingsFeature
+@testable import FreePulseCheck
 
 @MainActor
 @Suite

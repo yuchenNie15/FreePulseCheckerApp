@@ -1,5 +1,5 @@
 extension License {
-    public static let all: [License] = [
+    internal static let all: [License] = [
         License(
             id: "composable-architecture",
             name: "The Composable Architecture",

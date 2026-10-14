@@ -1,33 +1,30 @@
 import AppClients
 import ComposableArchitecture
 import DesignSystem
-import HistoryFeature
-import MeasureFeature
-import SettingsFeature
 import SwiftUI
 
 @Reducer
-public struct AppFeature: Sendable {
+internal struct AppFeature: Sendable {
     @ObservableState
-    public struct State: Equatable, Sendable {
-        @Shared(.selectedTab) public var selectedTab
-        public var measure = MeasureFeature.State()
-        public var history = HistoryFeature.State()
-        public var settings = SettingsFeature.State()
+    internal struct State: Equatable, Sendable {
+        @Shared(.selectedTab) internal var selectedTab
+        internal var measure = MeasureFeature.State()
+        internal var history = HistoryFeature.State()
+        internal var settings = SettingsFeature.State()
 
-        public init() {}
+        internal init() {}
     }
 
-    public enum Action: Equatable, Sendable {
+    internal enum Action: Equatable, Sendable {
         case history(HistoryFeature.Action)
         case measure(MeasureFeature.Action)
         case settings(SettingsFeature.Action)
         case tabSelected(AppTab)
     }
 
-    public init() {}
+    internal init() {}
 
-    public var body: some ReducerOf<Self> {
+    internal var body: some ReducerOf<Self> {
         Scope(\.measure, action: \.measure) { MeasureFeature() }
         Scope(\.history, action: \.history) { HistoryFeature() }
         Scope(\.settings, action: \.settings) { SettingsFeature() }
@@ -43,14 +40,14 @@ public struct AppFeature: Sendable {
     }
 }
 
-public struct AppView: View {
+internal struct AppView: View {
     @Bindable private var store: StoreOf<AppFeature>
 
-    public init(store: StoreOf<AppFeature>) {
+    internal init(store: StoreOf<AppFeature>) {
         self.store = store
     }
 
-    public var body: some View {
+    internal var body: some View {
         TabView(selection: $store.selectedTab.sending(\.tabSelected)) {
             Tab("Measure", systemImage: "heart.fill", value: AppTab.measure) {
                 MeasureView(store: store.scope(\.measure, action: \.measure))
