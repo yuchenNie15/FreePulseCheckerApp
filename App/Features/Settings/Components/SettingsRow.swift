@@ -39,3 +39,64 @@ internal struct SettingsRow: View {
         .accessibilityElement(children: .combine)
     }
 }
+
+internal struct SettingsRow_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<SettingsRow> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "TitleOnly", state: SettingsRow(icon: "lock.fill", tileColor: Color(hex: 0x0A84FF), title: "On-device only")),
+                .init(
+                    name: "Subtitle",
+                    state: SettingsRow(
+                        icon: "doc.text",
+                        tileColor: Color(hex: 0x636366),
+                        title: "Open-source licenses",
+                        subtitle: "Includes ClimbPulse (MIT)"
+                    )
+                ),
+                .init(name: "Value", state: SettingsRow(icon: "timer", tileColor: .warning, title: "Duration", value: "60 s")),
+                .init(
+                    name: "ValueColor",
+                    state: SettingsRow(
+                        icon: "heart.fill",
+                        iconColor: .accentStart,
+                        tileColor: .white,
+                        title: "Apple Health",
+                        value: "Connected",
+                        valueColor: .qualityGood
+                    )
+                ),
+                .init(
+                    name: "Chevron",
+                    state: SettingsRow(
+                        icon: "heart.fill",
+                        iconColor: .accentStart,
+                        tileColor: .white,
+                        title: "Apple Health",
+                        value: "Not connected",
+                        showsChevron: true
+                    )
+                ),
+                .init(
+                    name: "LongValue",
+                    state: SettingsRow(
+                        icon: "hand.point.up.left.fill",
+                        tileColor: .accentStart,
+                        title: "Method",
+                        value: "Fingertip on rear camera"
+                    )
+                ),
+            ],
+            configure: { row in
+                row
+                    .padding(.horizontal, 16)
+                    .frame(width: 358)
+                    .background(Color.surface)
+            }
+        )
+    }
+}

@@ -34,3 +34,26 @@ internal struct HealthSection: View {
         }
     }
 }
+
+internal struct HealthSection_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<HealthAccess?> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "Loading", state: nil),
+                .init(name: "Unavailable", state: .unavailable),
+                .init(name: "NotDetermined", state: .notDetermined),
+                .init(name: "Denied", state: .denied),
+                .init(name: "Authorized", state: .authorized),
+            ],
+            configure: { access in
+                List { HealthSection(access: access, onTap: {}) }
+                    .settingsListStyle()
+                    .frame(width: 390, height: 220)
+            }
+        )
+    }
+}

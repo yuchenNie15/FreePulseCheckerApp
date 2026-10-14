@@ -21,7 +21,10 @@ internal struct SettingsFeature: Sendable {
         internal var healthAccess: HealthAccess?
         internal var path = StackState<Path.State>()
 
-        internal init() {}
+        internal init(appVersion: String? = nil, healthAccess: HealthAccess? = nil) {
+            self.appVersion = appVersion
+            self.healthAccess = healthAccess
+        }
     }
 
     internal enum Action: Equatable, Sendable {

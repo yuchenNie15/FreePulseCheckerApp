@@ -31,3 +31,21 @@ internal struct LicensesView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+internal struct LicensesView_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<[License]> {
+        AppPreviewSnapshots(
+            configurations: [
+                .init(name: "All", state: License.all),
+                .init(name: "Short", state: [License.climbPulse, License.apache[0]]),
+            ],
+            configure: { licenses in
+                NavigationStack { LicensesView(licenses: licenses) }
+            }
+        )
+    }
+}

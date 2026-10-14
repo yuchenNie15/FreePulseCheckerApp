@@ -15,3 +15,20 @@ internal struct PrivacySection: View {
         }
     }
 }
+
+internal struct PrivacySection_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [.init(name: "Default", state: ())],
+            configure: { _ in
+                List { PrivacySection() }
+                    .settingsListStyle()
+                    .frame(width: 390, height: 220)
+            }
+        )
+    }
+}

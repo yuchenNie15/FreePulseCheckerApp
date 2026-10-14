@@ -25,3 +25,23 @@ internal struct AboutSection: View {
         }
     }
 }
+
+internal struct AboutSection_Previews: PreviewProvider {
+    internal static var previews: some View {
+        snapshots.previews
+    }
+
+    internal static var snapshots: AppPreviewSnapshots<Void> {
+        AppPreviewSnapshots(
+            configurations: [.init(name: "Default", state: ())],
+            configure: { _ in
+                NavigationStack {
+                    List { AboutSection() }
+                        .settingsListStyle()
+                        .toolbarVisibility(.hidden, for: .navigationBar)
+                }
+                .frame(width: 390, height: 220)
+            }
+        )
+    }
+}
