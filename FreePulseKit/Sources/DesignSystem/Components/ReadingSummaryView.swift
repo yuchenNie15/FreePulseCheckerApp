@@ -16,7 +16,7 @@ public struct ReadingSummaryView: View {
                     .font(.heroNumeral)
                     .foregroundStyle(LinearGradient.accent)
                 Text("BPM").font(.title3.weight(.semibold)).foregroundStyle(Color.textSecondary)
-                QualityBadge(reading.quality, prefix: "Signal:")
+                QualityBadge(reading.quality)
                     .padding(.top, 8)
             }
             .frame(maxWidth: .infinity)

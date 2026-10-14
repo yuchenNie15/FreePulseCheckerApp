@@ -3,17 +3,17 @@ import PulseEngine
 import SwiftUI
 
 internal struct SignalQualityChip: View {
-    /// Nil shows the "Reading…" placeholder.
+    /// Nil shows the "Checking accuracy…" placeholder.
     internal let quality: SignalQuality?
 
     internal var body: some View {
         Group {
             if let quality {
-                QualityBadge(quality, prefix: "Signal:")
+                QualityBadge(quality)
             } else {
                 HStack(spacing: 6) {
                     Circle().fill(Color.textSecondary).frame(width: 8, height: 8)
-                    Text("Quality: Reading…")
+                    Text("Checking accuracy…")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Color.textPrimary)
                 }

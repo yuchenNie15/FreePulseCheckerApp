@@ -12,9 +12,9 @@ extension SignalQuality {
 
     public var title: String {
         switch self {
-        case .good: "Good"
-        case .fair: "Fair"
-        case .poor: "Poor"
+        case .good: "High accuracy"
+        case .fair: "Medium accuracy"
+        case .poor: "Low accuracy"
         }
     }
 }

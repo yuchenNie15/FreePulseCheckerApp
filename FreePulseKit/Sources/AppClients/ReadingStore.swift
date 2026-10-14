@@ -19,7 +19,7 @@ extension ReadingStore: DependencyKey {
             @Dependency(\.healthKit) var healthKit
             @Dependency(\.log) var log
 
-            $readings.withLock { $0.insert(reading, at: 0) }
+            $readings.withLock { _ = $0.insert(reading, at: 0) }
             log.write(LogEntry(.info, .readingStore, "Saved reading \(reading.id) locally"))
             guard saveToHealth else { return }
             do {

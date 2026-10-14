@@ -34,20 +34,21 @@ public func assertSnapshots(
     column: UInt
 ) {
     let traits = UITraitCollection(userInterfaceStyle: .dark)
+    let recordMode: SnapshotTestingConfiguration.Record? = record ? .all : nil
     for (name, view) in views {
         switch layout {
         case .device:
             assertSnapshot(
                 of: UIHostingController(rootView: view),
                 as: .image(on: .iPhone13Pro, precision: 0.98, perceptualPrecision: 0.98, traits: traits),
-                named: name, record: record,
+                named: name, record: recordMode,
                 fileID: fileID, file: file, testName: testName, line: line, column: column
             )
         case .component:
             assertSnapshot(
                 of: view,
                 as: .image(precision: 0.98, perceptualPrecision: 0.98, layout: .sizeThatFits, traits: traits),
-                named: name, record: record,
+                named: name, record: recordMode,
                 fileID: fileID, file: file, testName: testName, line: line, column: column
             )
         }

@@ -21,7 +21,7 @@ internal struct HistoryRow: View {
             Circle()
                 .fill(reading.quality.color)
                 .frame(width: 10, height: 10)
-                .accessibilityLabel("\(reading.quality.title) quality")
+                .accessibilityLabel(reading.quality.title)
             HStack(alignment: .firstTextBaseline, spacing: 5) {
                 Text("\(reading.bpm)").font(.rowNumeral).foregroundStyle(Color.textPrimary)
                 Text("BPM").font(.subheadline.weight(.medium)).foregroundStyle(Color.textSecondary)
