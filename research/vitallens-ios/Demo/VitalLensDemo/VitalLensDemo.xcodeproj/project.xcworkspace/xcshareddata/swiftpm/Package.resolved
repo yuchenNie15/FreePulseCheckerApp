@@ -1,0 +1,15 @@
+{
+  "originHash" : "a01f8dcf7bbd0c2b7050ba3b7141010d92c5abf5d9cf3f143d69ef12730f0519",
+  "pins" : [
+    {
+      "identity" : "vitallens-core",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Rouast-Labs/vitallens-core.git",
+      "state" : {
+        "revision" : "08424ac710d6a64521e3ced7659d0e30a86a8e79",
+        "version" : "0.2.3"
+      }
+    }
+  ],
+  "version" : 3
+}

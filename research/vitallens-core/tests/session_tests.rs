@@ -1,0 +1,385 @@
+use std::fs::File;
+use std::io::BufReader;
+use std::collections::HashMap;
+use std::path::Path;
+use serde::Deserialize;
+use test_generator::test_resources;
+
+use vitallens_core::{Session, SessionConfig, SessionInput, WaveformMode};
+use vitallens_core::registry;
+use vitallens_core::types::FaceInput;
+
+const TOLERANCE_HR_BPM: f32 = 3.0;
+const TOLERANCE_RR_BPM: f32 = 3.0;
+const TOLERANCE_SDNN_MS: f32 = 10.0;
+const TOLERANCE_RMSSD_MS: f32 = 10.0;
+const TOLERANCE_IE_RATIO: f32 = 0.15;
+const TOLERANCE_PNN50: f32 = 5.0;
+const TOLERANCE_LFHF: f32 = 0.5;
+const TOLERANCE_SD1SD2: f32 = 0.05;
+const TOLERANCE_STRESS_INDEX: f32 = 20.0;
+
+const CONSISTENCY_TOLERANCE: f32 = 0.5;
+
+#[derive(Deserialize, Debug)]
+struct FaceRef {
+    coordinates: Vec<Vec<f32>>,
+    confidence: Vec<f32>,
+}
+
+#[derive(Deserialize, Debug)]
+struct ReferenceData {
+    #[serde(default)]
+    waveforms: HashMap<String, Waveform>,
+    #[serde(default)]
+    vitals: HashMap<String, Vital>,
+    face: Option<FaceRef>,
+    fps: f32,
+}
+
+#[derive(Deserialize, Debug)]
+struct Waveform {
+    data: Vec<f32>,
+    confidence: Option<Vec<f32>>,
+}
+
+#[derive(Deserialize, Debug)]
+struct Vital {
+    value: f32,
+    confidence: f32,
+}
+
+struct TestCase {
+    vital_id: String,
+    ground_truth: f32,
+    gt_confidence: f32,
+    tolerance: f32,
+    input_signal_key: String,
+    input_data: Vec<f32>,
+    input_confidence: Vec<f32>,
+}
+
+#[test_resources("tests/fixtures/*.json")]
+fn test_session(resource: &str) {
+    let path = Path::new(resource);
+    let filename = path.file_name().unwrap().to_str().unwrap();
+    let file = File::open(path).expect("Failed to open file");
+    let reader = BufReader::new(file);
+    let ref_data: ReferenceData = serde_json::from_reader(reader).expect("Failed to parse JSON");
+
+    println!("\n=== SESSION E2E: {} ===", filename);
+
+    let mut cases = Vec::new();
+    let duration_sec = if let Some(ppg) = ref_data.waveforms.get("ppg_waveform") {
+        ppg.data.len() as f32 / ref_data.fps
+    } else {
+        0.0
+    };
+
+    println!(" -> Duration: {:.2}s, Fs: {:.1}Hz", duration_sec, ref_data.fps);
+
+    let mut add_case = |id: &str, gt: Option<&Vital>, signal: Option<&Waveform>, key: &str, tol: f32| {
+        if let (Some(g), Some(s)) = (gt, signal) {
+            let meta = registry::get_vital_meta(id).unwrap();
+            let min_win = meta.derivations[0].min_window_seconds;
+            if duration_sec >= min_win {
+                let real_conf = s.confidence.clone().unwrap_or_else(|| vec![1.0; s.data.len()]);
+
+                cases.push(TestCase {
+                    vital_id: id.to_string(),
+                    ground_truth: g.value,
+                    gt_confidence: g.confidence,
+                    tolerance: tol,
+                    input_signal_key: key.to_string(),
+                    input_data: s.data.clone(),
+                    input_confidence: real_conf,
+                });
+            }
+        }
+    };
+
+    add_case("heart_rate", ref_data.vitals.get("heart_rate"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_HR_BPM);
+    add_case("respiratory_rate", ref_data.vitals.get("respiratory_rate"), ref_data.waveforms.get("respiratory_waveform"), "respiratory_waveform", TOLERANCE_RR_BPM);
+    add_case("hrv_sdnn", ref_data.vitals.get("hrv_sdnn"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_SDNN_MS);
+    add_case("hrv_rmssd", ref_data.vitals.get("hrv_rmssd"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_RMSSD_MS);
+    add_case("hrv_lfhf", ref_data.vitals.get("hrv_lfhf"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_LFHF);
+    add_case("hrv_pnn50", ref_data.vitals.get("hrv_pnn50"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_PNN50);
+    add_case("hrv_sd1sd2", ref_data.vitals.get("hrv_sd1sd2"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_SD1SD2);
+    add_case("ie_ratio", ref_data.vitals.get("ie_ratio"), ref_data.waveforms.get("respiratory_waveform"), "respiratory_waveform", TOLERANCE_IE_RATIO);
+    add_case("stress_index", ref_data.vitals.get("stress_index"), ref_data.waveforms.get("ppg_waveform"), "ppg_waveform", TOLERANCE_STRESS_INDEX);
+
+    if cases.is_empty() {
+        println!(" [SKIP] No valid vitals found in file.");
+        return;
+    }
+    
+    let active_vitals: Vec<&String> = cases.iter().map(|c| &c.vital_id).collect();
+    println!(" -> Active Vitals: {:?}", active_vitals);
+
+    let max_len = cases.iter().map(|c| c.input_data.len()).max().unwrap_or(0);
+
+    let (global_results, global_waves, global_rolling) = run_session_extraction(&ref_data, &cases, WaveformMode::Global);
+    let (inc_results, inc_waves, _) = run_session_extraction(&ref_data, &cases, WaveformMode::Incremental);
+    let (win_results, win_waves, _) = run_session_extraction(&ref_data, &cases, WaveformMode::Windowed { seconds: 30.0 });
+
+    let mut failures = Vec::new();
+
+    println!("\n --- ASSERTIONS [{}] ---", filename);
+
+    let rolling_map = global_rolling.expect("SessionResult.rolling_vitals should not be None in Global mode");
+
+    assert!(
+        rolling_map.contains_key("heart_rate"),
+        "Rolling vitals map missing 'heart_rate' key for {}", filename
+    );
+
+    let hr_rolling = &rolling_map["heart_rate"];
+    assert_eq!(
+        hr_rolling.data.len(),
+        max_len,
+        "Rolling HR waveform length {} does not match session length {}", hr_rolling.data.len(), max_len
+    );
+
+    assert!(
+        hr_rolling.data.iter().any(|v| !v.is_nan()),
+        "Rolling HR for {} exists but contains no valid numeric values", filename
+    );
+
+    println!(" [OK] Rolling Heart Rate verified.");
+
+    for case in &cases {
+        let vid = &case.vital_id;
+        let wave_key = &case.input_signal_key;
+
+        if let Some((data, conf)) = global_waves.get(wave_key) {
+            let expected = case.input_data.len();
+            assert_eq!(data.len(), expected, "GLOBAL Waveform {} data length mismatch", wave_key);
+            assert_eq!(conf.len(), expected, "GLOBAL Waveform {} confidence length mismatch", wave_key);
+        }
+
+        if let Some((data, conf)) = inc_waves.get(wave_key) {
+            assert_eq!(data.len(), case.input_data.len(), "INCREMENTAL total entries mismatch for {}", wave_key);
+            assert_eq!(data.len(), conf.len(), "INCREMENTAL {} data/conf length mismatch", wave_key);
+        }
+
+        if let Some((data, conf)) = win_waves.get(wave_key) {
+            let window_frames = (30.0 * ref_data.fps) as usize;
+            let expected_len = window_frames.min(case.input_data.len());
+            
+            assert!(data.len() >= expected_len, "WINDOWED entries for {} insufficient", wave_key);
+            assert_eq!(data.len(), conf.len(), "WINDOWED {} data/conf length mismatch", wave_key);
+        }
+        
+        if let Some(&(val, conf)) = global_results.get(vid) {
+            let val_diff = (val - case.ground_truth).abs();
+            let conf_diff = (conf - case.gt_confidence).abs();
+            
+            if val_diff <= case.tolerance {
+                println!(" [OK] Global {}: Val {:.2} (Ref {:.2})", vid, val, case.ground_truth);
+            } else {
+                let msg = format!("Global {} Value Mismatch: {:.2} vs Ref {:.2} (Diff {:.2})", 
+                    vid, val, case.ground_truth, val_diff);
+                println!(" [X] {}", msg);
+                failures.push(msg);
+            }
+
+            if conf_diff <= 0.01 { 
+                 println!(" [OK] Global {} Conf: {:.2} (Ref {:.2})", vid, conf, case.gt_confidence);
+            } else {
+                 let msg = format!("Global {} Conf Mismatch: {:.2} vs Ref {:.2} (Diff {:.2})", 
+                    vid, conf, case.gt_confidence, conf_diff);
+                 println!(" [X] {}", msg);
+                 failures.push(msg);
+            }
+
+        } else {
+            println!(" [WARN] Global {} produced no result", vid);
+        }
+
+        match (inc_results.get(vid), win_results.get(vid)) {
+            (Some(&(inc_val, inc_conf)), Some(&(win_val, win_conf))) => {
+                let val_diff = (inc_val - win_val).abs();
+                let conf_diff = (inc_conf - win_conf).abs();
+
+                if val_diff <= CONSISTENCY_TOLERANCE && conf_diff <= CONSISTENCY_TOLERANCE {
+                    println!(" [OK] Consistency {}: Match (Val Diff {:.2}, Conf Diff {:.2})", vid, val_diff, conf_diff);
+                } else {
+                    let msg = format!("Consistency {} mismatch: ValDiff {:.2}, ConfDiff {:.2}", 
+                        vid, val_diff, conf_diff);
+                    println!(" [X] {}", msg);
+                    failures.push(msg);
+                }
+            },
+            (None, None) => println!(" [WARN] Neither streaming mode produced result for {}", vid),
+            _ => {
+                 let msg = format!("Streaming mismatch: One mode produced result for {}, one did not", vid);
+                 println!(" [X] {}", msg);
+                 failures.push(msg);
+            }
+        }
+    }
+
+    if !failures.is_empty() {
+        panic!("Session E2E Failed:\n{}", failures.join("\n"));
+    }
+}
+
+fn run_session_extraction(
+    ref_data: &ReferenceData, 
+    cases: &[TestCase], 
+    mode: WaveformMode
+) -> (
+    HashMap<String, (f32, f32)>,
+    HashMap<String, (Vec<f32>, Vec<f32>)>,
+    Option<HashMap<String, vitallens_core::types::WaveformResult>>
+) {
+    
+    let supported_vitals: Vec<String> = cases.iter().map(|c| c.vital_id.clone()).collect();
+    let config = SessionConfig {
+        model_name: "vitallens-2.0".to_string(),
+        supported_vitals,
+        return_waveforms: Some(vec!["ppg_waveform".to_string(), "respiratory_waveform".to_string()]),
+        fps_target: ref_data.fps,
+        input_size: 30,
+        n_inputs: 4,
+        roi_method: "face".to_string(),
+        estimate_rolling_vitals: Some(true),
+    };
+    
+    let session = Session::new(config);
+
+    let max_len = cases.iter().map(|c| c.input_data.len()).max().unwrap_or(0);
+    let global_timestamps: Vec<f64> = (0..max_len).map(|t| {
+        let base = t as f64 / ref_data.fps as f64;
+        let jitter = if t % 2 == 0 { 0.001 } else { -0.001 };
+        base + jitter
+    }).collect();
+
+    let (window_size, step_size) = match mode {
+        WaveformMode::Global => (max_len, max_len),
+        WaveformMode::Incremental => (15, 12), 
+        WaveformMode::Windowed { .. } => (30, 25), 
+    };
+    
+    let mut final_results: HashMap<String, (f32, f32)> = HashMap::new();
+    let mut waveform_results: HashMap<String, (Vec<f32>, Vec<f32>)> = HashMap::new();
+    let mut rolling_results = None;
+    let mut start = 0;
+
+    println!(" -> Running Mode: {:?} (Chunk {}, Step {})", mode, window_size, step_size);
+
+    while start < max_len {
+        let end = (start + window_size).min(max_len);
+        
+        let unique_frames_sent = if start == 0 { end } else { end - (start + window_size - step_size) };
+        
+        let ts_slice = &global_timestamps[start..end];
+        let mut signal_map = HashMap::new();
+
+        for case in cases {
+            if start < case.input_data.len() {
+                let case_end = (start + window_size).min(case.input_data.len());
+                if case_end > start {
+                    let slice_data = &case.input_data[start..case_end];
+                    let slice_conf = &case.input_confidence[start..case_end];
+                    signal_map.insert(
+                        case.input_signal_key.clone(),
+                        vitallens_core::types::SignalInput {
+                            data: slice_data.to_vec(),
+                            confidence: slice_conf.to_vec(),
+                        }
+                    );
+                }
+            }
+        }
+
+        let face_input = if let Some(face_ref) = &ref_data.face {
+            if start < face_ref.coordinates.len() {
+                let case_end = (start + window_size).min(face_ref.coordinates.len());
+                if case_end > start {
+                    Some(FaceInput {
+                        coordinates: face_ref.coordinates[start..case_end].to_vec(),
+                        confidence: face_ref.confidence[start..case_end].to_vec(),
+                    })
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        let input = SessionInput {
+            timestamp: ts_slice.to_vec(),
+            signals: signal_map,
+            face: face_input,
+        };
+
+        let result = session.process(input, mode.clone());
+
+        if result.rolling_vitals.is_some() {
+            rolling_results = result.rolling_vitals;
+        }
+
+        if ref_data.face.is_some() {
+            if let Some(face_res) = &result.face {
+                if matches!(mode, WaveformMode::Global) {
+                     assert_eq!(
+                        face_res.coordinates.len(), 
+                        result.timestamp.len(), 
+                        "Face result length mismatch in Global mode"
+                    );
+                }
+                
+                if let Some(last_coords) = face_res.coordinates.last() {
+                     let end_idx = end - 1;
+                     let input_coords = &ref_data.face.as_ref().unwrap().coordinates[end_idx];
+                     if !last_coords.is_empty() && !input_coords.is_empty() {
+                         assert!((last_coords[0] - input_coords[0]).abs() < 1.0, 
+                             "Face coordinate drift detected: Input {:?} vs Output {:?}", input_coords, last_coords);
+                     }
+                }
+            } else {
+                panic!("Session failed to return FaceResult despite valid FaceInput provided.");
+            }
+        }
+
+        for (key, val) in result.waveforms {
+            let entry = waveform_results.entry(key.clone()).or_insert((Vec::new(), Vec::new()));
+
+            if matches!(mode, WaveformMode::Incremental) {
+                if !val.data.is_empty() {
+                    assert_eq!(
+                        val.data.len(), 
+                        unique_frames_sent, 
+                        "Incremental mode for {} returned {} frames, expected {} (unique frames sent)", 
+                        key, val.data.len(), unique_frames_sent
+                    );
+                    
+                    assert_eq!(
+                        val.confidence.len(),
+                        unique_frames_sent,
+                        "Incremental mode for {} returned {} confidence scores, expected {}",
+                        key, val.confidence.len(), unique_frames_sent
+                    );
+                }
+                entry.0.extend(val.data);
+                entry.1.extend(val.confidence);
+            } else {
+                entry.0 = val.data;
+                entry.1 = val.confidence;
+            }
+        }
+        
+        for (key, val) in result.vitals {
+            final_results.insert(key, (val.value, val.confidence));
+        }
+
+        if end == max_len { break; }
+        start += step_size;
+    }
+
+    (final_results, waveform_results, rolling_results)
+}
