@@ -515,7 +515,6 @@
 			mainGroup = F1C000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F1C0000000000000000000C1 /* XCLocalSwiftPackageReference "FreePulseKit" */,
 				F1C0000000000000000000C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				F1C0000000000000000000C3 /* XCLocalSwiftPackageReference "Vendor/swift-snapshot-testing" */,
 			);
@@ -693,10 +692,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F1C0000000000000000000C1 /* XCLocalSwiftPackageReference "FreePulseKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = FreePulseKit;
-		};
 		F1C0000000000000000000C3 /* XCLocalSwiftPackageReference "Vendor/swift-snapshot-testing" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "Vendor/swift-snapshot-testing";

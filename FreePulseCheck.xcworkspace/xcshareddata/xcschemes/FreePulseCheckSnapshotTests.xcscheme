@@ -3,7 +3,11 @@
    <BuildAction parallelizeBuildables = "YES" buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry buildForTesting = "YES" buildForRunning = "NO" buildForProfiling = "NO" buildForArchiving = "NO" buildForAnalyzing = "YES">
-            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000043" BuildableName = "FreePulseCheckTests.xctest" BlueprintName = "FreePulseCheckTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000048" BuildableName = "FreePulseCheckSnapshotTests.xctest" BlueprintName = "FreePulseCheckSnapshotTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry buildForTesting = "YES" buildForRunning = "NO" buildForProfiling = "NO" buildForArchiving = "NO" buildForAnalyzing = "YES">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "DesignSystemSnapshotTests" BuildableName = "DesignSystemSnapshotTests" BlueprintName = "DesignSystemSnapshotTests" ReferencedContainer = "container:FreePulseKit">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -15,7 +19,11 @@
       </MacroExpansion>
       <Testables>
          <TestableReference skipped = "NO" parallelizable = "YES">
-            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000043" BuildableName = "FreePulseCheckTests.xctest" BlueprintName = "FreePulseCheckTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "F1C000000000000000000048" BuildableName = "FreePulseCheckSnapshotTests.xctest" BlueprintName = "FreePulseCheckSnapshotTests" ReferencedContainer = "container:FreePulseCheck.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference skipped = "NO" parallelizable = "YES">
+            <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "DesignSystemSnapshotTests" BuildableName = "DesignSystemSnapshotTests" BlueprintName = "DesignSystemSnapshotTests" ReferencedContainer = "container:FreePulseKit">
             </BuildableReference>
          </TestableReference>
       </Testables>

@@ -6,7 +6,7 @@ extension AppPreviewSnapshots {
     - Parameter layout: Full-screen device or size-to-fit rendering.
     - Parameter record: Re-records the reference images instead of comparing.
     - Parameter fileID: The caller's file ID, for failure reporting.
-    - Parameter file: The caller's file path; reference images live in `__Snapshots__` beside it.
+    - Parameter file: The caller's file path; reference images mirror it under `Snapshots/` at the repo root.
     - Parameter testName: Prefix for the reference image names.
     - Parameter line: The caller's line, for failure reporting.
     - Parameter column: The caller's column, for failure reporting. */
